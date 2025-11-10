@@ -52,6 +52,18 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
+# Cache Configuration - Use dummy cache for Vercel (no Redis)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Celery Configuration - Disable for Vercel
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
+
 # Database - Use SQLite for serverless (or add PostgreSQL connection)
 # For production, you should use a managed database like:
 # - Vercel Postgres
