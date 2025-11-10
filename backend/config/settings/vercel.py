@@ -26,13 +26,31 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:3000",
+    "https://quiz-master-app-roh5.vercel.app",  # Your frontend URL
 ]
 
 # Add Vercel frontend URL when deployed
 if 'FRONTEND_URL' in os.environ:
-    CORS_ALLOWED_ORIGINS.append(os.environ['FRONTEND_URL'])
+    frontend_urls = os.environ['FRONTEND_URL'].split(',')
+    CORS_ALLOWED_ORIGINS.extend(frontend_urls)
+
+# Allow all Vercel preview deployments
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.vercel\.app$",
+]
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
 
 # Database - Use SQLite for serverless (or add PostgreSQL connection)
 # For production, you should use a managed database like:
