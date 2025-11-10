@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: 'Inter';
+    src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-slate-900 text-slate-50;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-2 bg-slate-700 text-white rounded-lg font-semibold hover:bg-slate-600 transition-all duration-200;
+  }
+
+  .btn-outline {
+    @apply px-6 py-2 border-2 border-purple-600 text-purple-600 rounded-lg font-semibold hover:bg-purple-50 transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-slate-800 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 overflow-hidden;
+  }
+
+  .card-hover {
+    @apply card hover:translate-y-(-2px) cursor-pointer;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all duration-200;
+  }
+
+  .section-title {
+    @apply text-3xl font-bold text-white mb-8;
+  }
+
+  .section-subtitle {
+    @apply text-lg text-slate-300 mb-4;
+  }
+
+  .badge {
+    @apply inline-block px-3 py-1 bg-purple-600/20 text-purple-300 rounded-full text-sm font-medium;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent;
+  }
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(to right, #f0f0f0 0%, #f9f9f9 50%, #f0f0f0 100%);
+  background-size: 1000px 100%;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
