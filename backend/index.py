@@ -1,17 +1,15 @@
 import os
 import sys
 
-# Add the current directory to Python path
-sys.path.insert(0, os.path.dirname(__file__))
+# Add current directory to path
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-# Set Django settings
+# Django settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.vercel')
 
-# Import Django WSGI application
+# Import and setup Django
 from django.core.wsgi import get_wsgi_application
-
-# Create WSGI application
 application = get_wsgi_application()
 
-# This is what Vercel will call
+# Export for Vercel
 app = application

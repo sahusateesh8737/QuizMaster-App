@@ -6,7 +6,7 @@ import os
 from .base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # Vercel provides the VERCEL_URL environment variable
 ALLOWED_HOSTS = [

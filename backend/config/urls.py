@@ -6,10 +6,28 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import JsonResponse
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+def api_root(request):
+    """API root endpoint"""
+    return JsonResponse({
+        'message': 'QuizMaster API',
+        'version': '1.0',
+        'endpoints': {
+            'auth': '/api/token/',
+            'users': '/api/users/',
+            'quizzes': '/api/quizzes/',
+            'results': '/api/results/',
+            'live': '/api/live/',
+            'admin': '/admin/',
+        }
+    })
+
 urlpatterns = [
+    path('', api_root, name='api-root'),
+    path('api/', api_root, name='api-root-with-prefix'),
     path('admin/', admin.site.urls),
     path('api/auth/', include('rest_framework.urls')),
     
