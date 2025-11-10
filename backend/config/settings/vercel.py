@@ -61,14 +61,12 @@ else:
 
 # Static files configuration for Vercel
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-] if os.path.exists(os.path.join(BASE_DIR, 'static')) else []
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = []
 
-# Media files configuration
+# Media files configuration (use external storage for production)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Security settings (relaxed for serverless)
 SECURE_SSL_REDIRECT = False  # Vercel handles SSL
