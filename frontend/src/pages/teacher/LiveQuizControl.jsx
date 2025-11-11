@@ -12,6 +12,7 @@ import Card from '../../components/ui/Card'
 import LoadingSpinner from '../../components/ui/LoadingSpinner'
 import LiveLeaderboard from '../../components/live/LiveLeaderboard'
 import { useLiveQuizStore } from '../../store/slices/liveQuizStore'
+import { useQuizSocket } from '../../hooks/useQuizSocket'
 
 export default function LiveQuizControl() {
   const { sessionId } = useParams()
@@ -34,6 +35,36 @@ export default function LiveQuizControl() {
   const [questionStats, setQuestionStats] = useState(null)
   const [sessionNotFound, setSessionNotFound] = useState(false)
   const [lastPollTime, setLastPollTime] = useState(new Date())
+  const [wsConnected, setWsConnected] = useState(false)
+
+  // WebSocket connection with fallback to polling
+  const { isConnected } = useQuizSocket(sessionId, {
+    onQuizCompleted: (data) => {
+      console.log('LiveQuizControl: WebSocket - Quiz completed, redirecting')
+      navigate(`/live/results/${sessionId}`)
+    },
+    onQuestionChanged: (data) => {
+      console.log('LiveQuizControl: WebSocket - Question changed, refreshing data')
+      fetchSessionData()
+      setQuestionStats(null)
+    },
+    onParticipantJoined: (data) => {
+      console.log('LiveQuizControl: WebSocket - Participant joined, updating list')
+      fetchParticipants(parseInt(sessionId))
+    },
+    onConnected: () => {
+      console.log('LiveQuizControl: WebSocket connected')
+      setWsConnected(true)
+    },
+    onDisconnected: () => {
+      console.log('LiveQuizControl: WebSocket disconnected, falling back to polling')
+      setWsConnected(false)
+    },
+    onConnectionError: (error) => {
+      console.log('LiveQuizControl: WebSocket error, using polling fallback')
+      setWsConnected(false)
+    }
+  }, true)
 
   // Poll session data
   useEffect(() => {
@@ -50,6 +81,9 @@ export default function LiveQuizControl() {
 
     loadData()
 
+    // Poll with different intervals: 5s if WebSocket connected, 2s as fallback
+    const pollInterval = wsConnected ? 5000 : 2000
+    
     const interval = setInterval(async () => {
       if (sessionNotFound) {
         clearInterval(interval)
@@ -65,10 +99,10 @@ export default function LiveQuizControl() {
         setSessionNotFound(true)
         clearInterval(interval)
       }
-    }, 2000)
+    }, pollInterval)
 
     return () => clearInterval(interval)
-  }, [sessionId])
+  }, [sessionId, wsConnected])
 
   const fetchSessionData = async () => {
     try {
@@ -264,12 +298,20 @@ export default function LiveQuizControl() {
                 <div className="text-center">
                   <div className="flex items-center gap-2 mb-1 text-slate-400">
                     <div className={`w-2 h-2 rounded-full ${
-                      new Date() - lastPollTime < 3000 ? 'bg-green-500 animate-pulse' : 'bg-red-500'
+                      wsConnected 
+                        ? 'bg-green-500 animate-pulse' 
+                        : new Date() - lastPollTime < 3000 
+                          ? 'bg-yellow-500 animate-pulse' 
+                          : 'bg-red-500'
                     }`}></div>
                     <span className="text-sm">Status</span>
                   </div>
                   <p className="text-xs text-slate-500">
-                    {new Date() - lastPollTime < 3000 ? 'Connected' : 'Checking...'}
+                    {wsConnected 
+                      ? 'WebSocket' 
+                      : new Date() - lastPollTime < 3000 
+                        ? 'Polling' 
+                        : 'Checking...'}
                   </p>
                 </div>
               </div>
