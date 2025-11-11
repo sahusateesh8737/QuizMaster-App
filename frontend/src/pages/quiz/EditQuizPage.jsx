@@ -7,6 +7,7 @@ import Card from '../../components/ui/Card'
 import Input from '../../components/ui/Input'
 import LoadingSpinner from '../../components/ui/LoadingSpinner'
 import { useAuthStore } from '../../store/slices/authStore'
+import getApiUrl from '../../utils/apiConfig'
 import toast from 'react-hot-toast'
 
 export default function EditQuizPage() {
@@ -43,7 +44,7 @@ export default function EditQuizPage() {
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch(${getApiUrl()}/quizzes/categories/', {
+      const response = await fetch(`${getApiUrl()}/quizzes/categories/', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

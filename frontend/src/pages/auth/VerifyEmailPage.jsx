@@ -5,6 +5,7 @@ import { CheckCircle, XCircle, Mail } from 'lucide-react'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import LoadingSpinner from '../../components/ui/LoadingSpinner'
+import getApiUrl from '../../utils/apiConfig'
 import toast from 'react-hot-toast'
 
 export default function VerifyEmailPage() {
@@ -29,7 +30,7 @@ export default function VerifyEmailPage() {
     }
 
     try {
-      const response = await fetch(${getApiUrl()}/users/verify-email/', {
+      const response = await fetch(`${getApiUrl()}/users/verify-email/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

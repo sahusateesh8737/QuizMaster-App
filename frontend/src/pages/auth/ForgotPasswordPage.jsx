@@ -5,6 +5,7 @@ import { KeyRound, ArrowLeft, Mail } from 'lucide-react'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import Input from '../../components/ui/Input'
+import getApiUrl from '../../utils/apiConfig'
 import toast from 'react-hot-toast'
 
 export default function ForgotPasswordPage() {
@@ -23,7 +24,7 @@ export default function ForgotPasswordPage() {
 
     setLoading(true)
     try {
-      const response = await fetch(${getApiUrl()}/users/forgot-password/', {
+      const response = await fetch(`${getApiUrl()}/users/forgot-password/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

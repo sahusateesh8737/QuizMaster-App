@@ -23,6 +23,7 @@ import Badge from '../../components/ui/Badge'
 import LoadingSpinner from '../../components/ui/LoadingSpinner'
 import { useAuthStore } from '../../store/slices/authStore'
 import { useResultsStore } from '../../store/slices/resultsStore'
+import getApiUrl from '../../utils/apiConfig'
 import toast from 'react-hot-toast'
 
 export default function ProfilePage() {
@@ -93,7 +94,7 @@ export default function ProfilePage() {
         formData.append('avatar', profileData.avatar)
       }
 
-      const response = await fetch(${getApiUrl()}/users/profile/', {
+      const response = await fetch(`${getApiUrl()}/users/profile/', {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,

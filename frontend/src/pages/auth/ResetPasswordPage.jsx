@@ -6,6 +6,7 @@ import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import Input from '../../components/ui/Input'
 import LoadingSpinner from '../../components/ui/LoadingSpinner'
+import getApiUrl from '../../utils/apiConfig'
 import toast from 'react-hot-toast'
 
 export default function ResetPasswordPage() {
@@ -38,7 +39,7 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const response = await fetch(${getApiUrl()}/users/validate-reset-token/', {
+      const response = await fetch(`${getApiUrl()}/users/validate-reset-token/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +85,7 @@ export default function ResetPasswordPage() {
 
     setResetting(true)
     try {
-      const response = await fetch(${getApiUrl()}/users/reset-password/', {
+      const response = await fetch(`${getApiUrl()}/users/reset-password/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

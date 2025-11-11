@@ -6,6 +6,7 @@ import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
 import LoadingSpinner from '../../components/ui/LoadingSpinner'
 import { useAuthStore } from '../../store/slices/authStore'
+import getApiUrl from '../../utils/apiConfig'
 import toast from 'react-hot-toast'
 
 export default function ManageQuizzesPage() {
@@ -108,7 +109,7 @@ export default function ManageQuizzesPage() {
       delete newQuiz.created_at
       delete newQuiz.updated_at
       
-      const createResponse = await fetch(${getApiUrl()}/quizzes/', {
+      const createResponse = await fetch(`${getApiUrl()}/quizzes/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
