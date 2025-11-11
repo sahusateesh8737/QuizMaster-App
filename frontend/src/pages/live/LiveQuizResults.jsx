@@ -23,10 +23,19 @@ export default function LiveQuizResults() {
   const [sessionData, setSessionData] = useState(null)
   const [stats, setStats] = useState(null)
   const [confettiShown, setConfettiShown] = useState(false)
+  const [sessionNotFound, setSessionNotFound] = useState(false)
 
   useEffect(() => {
-    fetchSessionData()
-    fetchLeaderboard(parseInt(sessionId))
+    const loadData = async () => {
+      try {
+        await fetchSessionData()
+        await fetchLeaderboard(parseInt(sessionId))
+      } catch (err) {
+        console.error('Failed to load session data:', err)
+        setSessionNotFound(true)
+      }
+    }
+    loadData()
   }, [sessionId])
 
   useEffect(() => {
@@ -53,9 +62,14 @@ export default function LiveQuizResults() {
         const data = await response.json()
         setSessionData(data)
         calculateStats(data)
+      } else if (response.status === 404) {
+        setSessionNotFound(true)
+        throw new Error('Session not found')
       }
     } catch (error) {
       console.error('Error fetching session:', error)
+      setSessionNotFound(true)
+      throw error
     }
   }
 
@@ -120,6 +134,31 @@ export default function LiveQuizResults() {
     } else {
       navigate('/dashboard')
     }
+  }
+
+  // Show error if session not found
+  if (sessionNotFound) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">
+        <Card className="max-w-md w-full text-center">
+          <div className="text-red-500 mb-4">
+            <svg className="w-16 h-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Session Not Found</h2>
+          <p className="text-slate-400 mb-6">
+            This quiz session doesn't exist or has been deleted.
+          </p>
+          <button
+            onClick={() => navigate('/')}
+            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition"
+          >
+            Go Home
+          </button>
+        </Card>
+      </div>
+    )
   }
 
   if (loading || !sessionData) {

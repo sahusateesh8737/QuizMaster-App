@@ -32,17 +32,37 @@ export default function LiveQuizControl() {
   const [copied, setCopied] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(null)
   const [questionStats, setQuestionStats] = useState(null)
+  const [sessionNotFound, setSessionNotFound] = useState(false)
 
   // Poll session data
   useEffect(() => {
-    fetchSessionData()
-    fetchParticipants(parseInt(sessionId))
-    fetchLeaderboard(parseInt(sessionId))
+    const loadData = async () => {
+      try {
+        await fetchSessionData()
+        await fetchParticipants(parseInt(sessionId))
+        await fetchLeaderboard(parseInt(sessionId))
+      } catch (err) {
+        console.error('Failed to load session:', err)
+        setSessionNotFound(true)
+      }
+    }
 
-    const interval = setInterval(() => {
-      fetchSessionData()
-      fetchParticipants(parseInt(sessionId))
-      fetchLeaderboard(parseInt(sessionId))
+    loadData()
+
+    const interval = setInterval(async () => {
+      if (sessionNotFound) {
+        clearInterval(interval)
+        return
+      }
+      try {
+        await fetchSessionData()
+        await fetchParticipants(parseInt(sessionId))
+        await fetchLeaderboard(parseInt(sessionId))
+      } catch (err) {
+        console.error('Error polling session:', err)
+        setSessionNotFound(true)
+        clearInterval(interval)
+      }
     }, 2000)
 
     return () => clearInterval(interval)
@@ -71,9 +91,14 @@ export default function LiveQuizControl() {
         if (data.status === 'completed') {
           navigate(`/live/results/${sessionId}`)
         }
+      } else if (response.status === 404) {
+        setSessionNotFound(true)
+        throw new Error('Session not found')
       }
     } catch (error) {
       console.error('Error fetching session:', error)
+      setSessionNotFound(true)
+      throw error
     }
   }
 
@@ -128,6 +153,31 @@ export default function LiveQuizControl() {
         navigate(`/live/results/${sessionId}`)
       }
     }
+  }
+
+  // Show error if session not found
+  if (sessionNotFound) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">
+        <Card className="max-w-md w-full text-center">
+          <div className="text-red-500 mb-4">
+            <svg className="w-16 h-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Session Not Found</h2>
+          <p className="text-slate-400 mb-6">
+            This live quiz session doesn't exist or has been deleted.
+          </p>
+          <button
+            onClick={() => navigate('/teacher/dashboard')}
+            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition"
+          >
+            Back to Dashboard
+          </button>
+        </Card>
+      </div>
+    )
   }
 
   if (loading || !currentSession) {
