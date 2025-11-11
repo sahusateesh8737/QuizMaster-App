@@ -6,7 +6,6 @@ import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import LiveLeaderboard from '../../components/live/LiveLeaderboard'
 import { useLiveQuizStore } from '../../store/slices/liveQuizStore'
-import { useQuizSocket } from '../../hooks/useQuizSocket'
 
 export default function LiveQuizPlay() {
   const { sessionId } = useParams()
@@ -29,45 +28,18 @@ export default function LiveQuizPlay() {
   const [answerResult, setAnswerResult] = useState(null)
   const [showLeaderboard, setShowLeaderboard] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [wsConnected, setWsConnected] = useState(false)
 
   const currentQuestion = currentSession?.current_question
   const startTime = currentSession?.current_question_start_time
   const currentQuestionIdRef = useRef(null)
-
-  // WebSocket connection with fallback to polling
-  useQuizSocket(sessionId, {
-    onQuizCompleted: (data) => {
-      console.log('LiveQuizPlay: WebSocket - Quiz completed, navigating to results')
-      navigate(`/live/results/${sessionId}`, {
-        state: { participantId }
-      })
-    },
-    onQuestionChanged: (data) => {
-      console.log('LiveQuizPlay: WebSocket - Question changed, resetting state')
-      setSelectedOption(null)
-      setAnswered(false)
-      setAnswerResult(null)
-      setShowLeaderboard(false)
-      fetchSession(sessionId)
-    },
-    onConnected: () => {
-      console.log('LiveQuizPlay: WebSocket connected')
-      setWsConnected(true)
-    },
-    onDisconnected: () => {
-      console.log('LiveQuizPlay: WebSocket disconnected')
-      setWsConnected(false)
-    }
-  }, true)
 
   // Poll for session updates
   useEffect(() => {
     fetchSession(sessionId)
     fetchLeaderboard(sessionId)
 
-    // Poll with different intervals: 5s if WebSocket connected, 2s as fallback
-    const pollInterval = wsConnected ? 5000 : 2000
+    // Poll every 2 seconds
+    const pollInterval = 2000
 
     const interval = setInterval(async () => {
       try {
@@ -106,7 +78,7 @@ export default function LiveQuizPlay() {
     }, pollInterval)
 
     return () => clearInterval(interval)
-  }, [sessionId, participantId, navigate, fetchSession, fetchLeaderboard, wsConnected])
+  }, [sessionId, participantId, navigate, fetchSession, fetchLeaderboard])
 
   // Countdown timer
   useEffect(() => {

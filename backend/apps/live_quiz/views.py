@@ -14,19 +14,6 @@ from .serializers import (
     LiveQuizQuestionResultSerializer
 )
 
-# Import WebSocket functions for real-time updates
-try:
-    from .socketio_server import (
-        emit_quiz_completed,
-        emit_question_changed,
-        emit_participant_joined,
-        emit_leaderboard_updated
-    )
-    WEBSOCKET_ENABLED = True
-except ImportError:
-    WEBSOCKET_ENABLED = False
-    print("Warning: WebSocket support not available. Real-time updates disabled.")
-
 
 class IsTeacherOrHost(permissions.BasePermission):
     """
@@ -113,20 +100,10 @@ class LiveQuizSessionViewSet(viewsets.ModelViewSet):
             # No more questions, end session
             session.end_session()
             
-            # Emit WebSocket event for quiz completion
-            if WEBSOCKET_ENABLED:
-                session_data = self.get_serializer(session).data
-                emit_quiz_completed(session.id, session_data)
-            
             return Response({
                 'detail': 'Quiz completed. No more questions.',
                 'session': self.get_serializer(session).data
             })
-        
-        # Emit WebSocket event for question change
-        if WEBSOCKET_ENABLED:
-            session_data = self.get_serializer(session).data
-            emit_question_changed(session.id, session_data)
         
         serializer = self.get_serializer(session)
         return Response(serializer.data)
@@ -143,11 +120,6 @@ class LiveQuizSessionViewSet(viewsets.ModelViewSet):
             )
         
         session.end_session()
-        
-        # Emit WebSocket event for quiz completion
-        if WEBSOCKET_ENABLED:
-            session_data = self.get_serializer(session).data
-            emit_quiz_completed(session.id, session_data)
         
         serializer = self.get_serializer(session)
         return Response(serializer.data)
@@ -241,12 +213,6 @@ class LiveQuizSessionViewSet(viewsets.ModelViewSet):
         if created:
             session.total_participants += 1
             session.save()
-            
-            # Emit WebSocket event for new participant
-            if WEBSOCKET_ENABLED:
-                participant_data = LiveQuizParticipantSerializer(participant).data
-                participant_data['participant_count'] = session.total_participants
-                emit_participant_joined(session.id, participant_data)
         
         return Response({
             'session': LiveQuizSessionSerializer(session).data,
