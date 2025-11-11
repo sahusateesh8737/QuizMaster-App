@@ -55,8 +55,9 @@ export default function CreateQuizPage() {
 
   const fetchCategories = async () => {
     try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
       const token = localStorage.getItem('access_token')
-      const response = await fetch('http://localhost:8000/api/quizzes/categories/', {
+      const response = await fetch(`${API_URL}/quizzes/categories/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -68,6 +69,7 @@ export default function CreateQuizPage() {
       }
     } catch (error) {
       console.error('Error fetching categories:', error)
+      toast.error('Failed to load categories')
     }
   }
 
@@ -193,13 +195,14 @@ export default function CreateQuizPage() {
     
     setLoading(true)
     try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
       const token = localStorage.getItem('access_token')
       
       // Debug: Log the quiz data being sent
       console.log('Creating quiz with data:', JSON.stringify(quizData, null, 2))
       
       // Create quiz
-      const quizResponse = await fetch('http://localhost:8000/api/quizzes/', {
+      const quizResponse = await fetch(`${API_URL}/quizzes/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -235,7 +238,7 @@ export default function CreateQuizPage() {
           order: i + 1,
         }
         
-        const questionResponse = await fetch(`http://localhost:8000/api/quizzes/${quiz.id}/questions/`, {
+        const questionResponse = await fetch(`${API_URL}/quizzes/${quiz.id}/questions/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
