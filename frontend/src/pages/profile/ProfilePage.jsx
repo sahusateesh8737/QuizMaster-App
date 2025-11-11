@@ -94,7 +94,7 @@ export default function ProfilePage() {
         formData.append('avatar', profileData.avatar)
       }
 
-      const response = await fetch(`${getApiUrl()}/users/profile/', {
+      const response = await fetch(`${getApiUrl()}/users/profile/`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,

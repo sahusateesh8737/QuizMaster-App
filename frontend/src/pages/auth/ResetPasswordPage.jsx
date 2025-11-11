@@ -39,7 +39,7 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const response = await fetch(`${getApiUrl()}/users/validate-reset-token/', {
+      const response = await fetch(`${getApiUrl()}/users/validate-reset-token/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ export default function ResetPasswordPage() {
 
     setResetting(true)
     try {
-      const response = await fetch(`${getApiUrl()}/users/reset-password/', {
+      const response = await fetch(`${getApiUrl()}/users/reset-password/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

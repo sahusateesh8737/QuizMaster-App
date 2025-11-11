@@ -109,7 +109,7 @@ export default function ManageQuizzesPage() {
       delete newQuiz.created_at
       delete newQuiz.updated_at
       
-      const createResponse = await fetch(`${getApiUrl()}/quizzes/', {
+      const createResponse = await fetch(`${getApiUrl()}/quizzes/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

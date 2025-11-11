@@ -30,7 +30,7 @@ export default function VerifyEmailPage() {
     }
 
     try {
-      const response = await fetch(`${getApiUrl()}/users/verify-email/', {
+      const response = await fetch(`${getApiUrl()}/users/verify-email/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

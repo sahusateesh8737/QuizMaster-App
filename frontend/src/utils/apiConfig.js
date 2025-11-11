@@ -1,6 +1,6 @@
 // API configuration utility
 const getApiUrl = () => {
-  return import.meta.env.VITE_API_URL || ${getApiUrl()}
+  return import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 }
 
 const getApiBase = () => {
