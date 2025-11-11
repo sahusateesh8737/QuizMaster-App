@@ -1,10 +1,11 @@
 from rest_framework import viewsets, status, permissions
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
 from django.db import models
+from django.contrib.auth import get_user_model
 from datetime import timedelta
 
 from .models import Category, Quiz, Question, QuizAttempt, UserAnswer
@@ -12,6 +13,52 @@ from .serializers import (
     CategorySerializer, QuizSerializer, QuizDetailSerializer, QuestionSerializer,
     QuizAttemptSerializer, SubmitAnswerSerializer
 )
+
+User = get_user_model()
+
+
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def initialize_categories(request):
+    """
+    Initialize the database with sample categories.
+    This endpoint can be called to set up initial categories.
+    """
+    try:
+        # Create categories
+        categories_data = [
+            {'name': 'Programming', 'slug': 'programming', 'description': 'Test your programming knowledge', 'icon': '💻'},
+            {'name': 'Science', 'slug': 'science', 'description': 'Explore scientific concepts', 'icon': '🔬'},
+            {'name': 'History', 'slug': 'history', 'description': 'Journey through time', 'icon': '📚'},
+            {'name': 'Mathematics', 'slug': 'mathematics', 'description': 'Solve mathematical problems', 'icon': '🔢'},
+            {'name': 'General Knowledge', 'slug': 'general-knowledge', 'description': 'Test your general knowledge', 'icon': '🌍'},
+            {'name': 'Literature', 'slug': 'literature', 'description': 'Explore world of books and authors', 'icon': '📖'},
+            {'name': 'Geography', 'slug': 'geography', 'description': 'Know your world', 'icon': '🗺️'},
+            {'name': 'Technology', 'slug': 'technology', 'description': 'Latest in tech world', 'icon': '⚡'},
+            {'name': 'Arts', 'slug': 'arts', 'description': 'Creative and visual arts', 'icon': '🎨'},
+            {'name': 'Sports', 'slug': 'sports', 'description': 'Sports and athletics', 'icon': '⚽'},
+        ]
+        
+        created_categories = []
+        for cat_data in categories_data:
+            category, created = Category.objects.get_or_create(
+                slug=cat_data['slug'],
+                defaults=cat_data
+            )
+            if created:
+                created_categories.append(category)
+        
+        return Response({
+            'message': 'Categories initialized successfully',
+            'total_categories': Category.objects.count(),
+            'newly_created': len(created_categories),
+            'categories': CategorySerializer(Category.objects.all(), many=True).data
+        }, status=status.HTTP_201_CREATED if created_categories else status.HTTP_200_OK)
+        
+    except Exception as e:
+        return Response({
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CategoryViewSet, QuizViewSet, QuizAttemptViewSet
+from .views import CategoryViewSet, QuizViewSet, QuizAttemptViewSet, initialize_categories
 
 router = DefaultRouter()
 router.register(r'categories', CategoryViewSet, basename='category')
@@ -8,5 +8,6 @@ router.register(r'', QuizViewSet, basename='quiz')
 router.register(r'attempts', QuizAttemptViewSet, basename='quiz-attempt')
 
 urlpatterns = [
+    path('initialize-categories/', initialize_categories, name='initialize-categories'),
     path('', include(router.urls)),
 ]
