@@ -7,6 +7,7 @@ import Card from '../components/ui/Card'
 import Badge from '../components/ui/Badge'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 import quizService from '../services/quiz'
+import getApiUrl from '../utils/apiConfig'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -58,7 +59,7 @@ export default function HomePage() {
       try {
         const token = localStorage.getItem('access_token')
         const headers = token ? { 'Authorization': `Bearer ${token}` } : {}
-        const catResponse = await fetch('http://localhost:8000/api/quizzes/categories/', { headers })
+        const catResponse = await fetch(`${getApiUrl()}/quizzes/categories/`, { headers })
         if (catResponse.ok) {
           const catData = await catResponse.json()
           setCategories((catData.results || catData).slice(0, 8))
@@ -71,7 +72,7 @@ export default function HomePage() {
       try {
         const token = localStorage.getItem('access_token')
         const headers = token ? { 'Authorization': `Bearer ${token}` } : {}
-        const statsResponse = await fetch('http://localhost:8000/api/users/platform-stats/', { headers })
+        const statsResponse = await fetch(`${getApiUrl()}/users/platform-stats/`, { headers })
         if (statsResponse.ok) {
           const statsData = await statsResponse.json()
           setStats(statsData)

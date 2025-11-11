@@ -29,7 +29,7 @@ export default function VerifyEmailPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/users/verify-email/', {
+      const response = await fetch(${getApiUrl()}/users/verify-email/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

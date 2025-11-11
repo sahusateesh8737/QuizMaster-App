@@ -55,7 +55,7 @@ export default function CreateQuizPage() {
 
   const fetchCategories = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+      const API_URL = import.meta.env.VITE_API_URL || ${getApiUrl()}
       const token = localStorage.getItem('access_token')
       const response = await fetch(`${API_URL}/quizzes/categories/`, {
         headers: {
@@ -195,7 +195,7 @@ export default function CreateQuizPage() {
     
     setLoading(true)
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+      const API_URL = import.meta.env.VITE_API_URL || ${getApiUrl()}
       const token = localStorage.getItem('access_token')
       
       // Debug: Log the quiz data being sent

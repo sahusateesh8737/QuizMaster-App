@@ -43,7 +43,7 @@ export default function EditQuizPage() {
   const fetchCategories = async () => {
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch('http://localhost:8000/api/quizzes/categories/', {
+      const response = await fetch(${getApiUrl()}/quizzes/categories/', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

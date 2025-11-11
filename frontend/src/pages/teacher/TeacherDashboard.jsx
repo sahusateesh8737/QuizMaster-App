@@ -7,6 +7,7 @@ import Card from '../../components/ui/Card'
 import LoadingSpinner from '../../components/ui/LoadingSpinner'
 import { useAuthStore } from '../../store/slices/authStore'
 import { useQuizStore } from '../../store/slices/quizStore'
+import getApiUrl from '../../utils/apiConfig'
 
 export default function TeacherDashboard() {
   const navigate = useNavigate()
@@ -23,7 +24,7 @@ export default function TeacherDashboard() {
   const fetchActiveSessions = async () => {
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch('http://localhost:8000/api/live/sessions/', {
+      const response = await fetch(`${getApiUrl()}/live/sessions/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },

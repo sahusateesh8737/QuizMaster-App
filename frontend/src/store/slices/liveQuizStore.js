@@ -1,6 +1,7 @@
 import { create } from 'zustand'
+import getApiUrl from '../../utils/apiConfig'
 
-const API_BASE = 'http://localhost:8000/api/live'
+const API_BASE = `${getApiUrl()}/live`
 
 export const useLiveQuizStore = create((set, get) => ({
   // State
