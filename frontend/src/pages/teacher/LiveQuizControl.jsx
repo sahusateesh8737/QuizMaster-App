@@ -33,6 +33,7 @@ export default function LiveQuizControl() {
   const [currentQuestion, setCurrentQuestion] = useState(null)
   const [questionStats, setQuestionStats] = useState(null)
   const [sessionNotFound, setSessionNotFound] = useState(false)
+  const [lastPollTime, setLastPollTime] = useState(new Date())
 
   // Poll session data
   useEffect(() => {
@@ -58,6 +59,7 @@ export default function LiveQuizControl() {
         await fetchSessionData()
         await fetchParticipants(parseInt(sessionId))
         await fetchLeaderboard(parseInt(sessionId))
+        setLastPollTime(new Date())
       } catch (err) {
         console.error('Error polling session:', err)
         setSessionNotFound(true)
@@ -79,6 +81,7 @@ export default function LiveQuizControl() {
       
       if (response.ok) {
         const data = await response.json()
+        console.log('LiveQuizControl: Fetched session data, status:', data.status)
         useLiveQuizStore.setState({ currentSession: data })
         
         // Fetch current question details if in progress
@@ -89,6 +92,7 @@ export default function LiveQuizControl() {
 
         // Redirect to results if completed
         if (data.status === 'completed') {
+          console.log('LiveQuizControl: Session completed, redirecting to results')
           navigate(`/live/results/${sessionId}`)
         }
       } else if (response.status === 404) {
@@ -172,20 +176,20 @@ export default function LiveQuizControl() {
   // Show error if session not found
   if (sessionNotFound) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">
-        <Card className="max-w-md w-full text-center">
-          <div className="text-red-500 mb-4">
+      <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900">
+        <Card className="w-full max-w-md text-center">
+          <div className="mb-4 text-red-500">
             <svg className="w-16 h-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Session Not Found</h2>
-          <p className="text-slate-400 mb-6">
+          <h2 className="mb-2 text-2xl font-bold text-white">Session Not Found</h2>
+          <p className="mb-6 text-slate-400">
             This live quiz session doesn't exist or has been deleted.
           </p>
           <button
             onClick={() => navigate('/teacher/dashboard')}
-            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transition"
+            className="px-6 py-3 font-semibold text-white transition rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
           >
             Back to Dashboard
           </button>
@@ -196,7 +200,7 @@ export default function LiveQuizControl() {
 
   if (loading || !currentSession) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900">
         <LoadingSpinner text="Loading control panel..." />
       </div>
     )
@@ -207,8 +211,8 @@ export default function LiveQuizControl() {
   const isLastQuestion = currentSession.current_question_index >= currentSession.question_count - 1
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 px-4 py-20">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen px-4 py-20 bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900">
+      <div className="mx-auto max-w-7xl">
         {/* Header with Join Code */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -218,7 +222,7 @@ export default function LiveQuizControl() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-white mb-1">
+                <h1 className="mb-1 text-3xl font-bold text-white">
                   {currentSession.quiz_title}
                 </h1>
                 <p className="text-slate-400">
@@ -227,14 +231,14 @@ export default function LiveQuizControl() {
               </div>
               
               <div className="text-center">
-                <p className="text-slate-400 text-sm mb-1">Join Code</p>
+                <p className="mb-1 text-sm text-slate-400">Join Code</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 tracking-wider">
+                  <span className="text-4xl font-bold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">
                     {currentSession.join_code}
                   </span>
                   <button
                     onClick={handleCopyCode}
-                    className="p-2 hover:bg-slate-700 rounded-lg transition-colors"
+                    className="p-2 transition-colors rounded-lg hover:bg-slate-700"
                   >
                     {copied ? (
                       <Check size={20} className="text-green-400" />
@@ -245,9 +249,9 @@ export default function LiveQuizControl() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-6">
                 <div className="text-center">
-                  <div className="flex items-center gap-2 text-slate-400 mb-1">
+                  <div className="flex items-center gap-2 mb-1 text-slate-400">
                     <Users size={16} />
                     <span className="text-sm">Participants</span>
                   </div>
@@ -255,21 +259,34 @@ export default function LiveQuizControl() {
                     {currentSession.participant_count || 0}
                   </p>
                 </div>
+                
+                {/* Connection Status Indicator */}
+                <div className="text-center">
+                  <div className="flex items-center gap-2 mb-1 text-slate-400">
+                    <div className={`w-2 h-2 rounded-full ${
+                      new Date() - lastPollTime < 3000 ? 'bg-green-500 animate-pulse' : 'bg-red-500'
+                    }`}></div>
+                    <span className="text-sm">Status</span>
+                  </div>
+                  <p className="text-xs text-slate-500">
+                    {new Date() - lastPollTime < 3000 ? 'Connected' : 'Checking...'}
+                  </p>
+                </div>
               </div>
             </div>
           </Card>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Left Column - Control & Question */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="space-y-6 lg:col-span-2">
             {/* Control Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
               <Card className="p-6">
-                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <h2 className="flex items-center gap-2 mb-4 text-xl font-bold text-white">
                   <BarChart className="text-purple-400" />
                   Quiz Control
                 </h2>
@@ -309,7 +326,7 @@ export default function LiveQuizControl() {
                 </div>
 
                 {isWaiting && currentSession.participant_count === 0 && (
-                  <div className="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg flex items-center gap-2 text-yellow-400 text-sm">
+                  <div className="flex items-center gap-2 p-3 mt-4 text-sm text-yellow-400 border rounded-lg bg-yellow-500/10 border-yellow-500/20">
                     <AlertCircle size={16} />
                     Waiting for participants to join...
                   </div>
@@ -335,7 +352,7 @@ export default function LiveQuizControl() {
                     </span>
                   </div>
 
-                  <p className="text-white text-lg mb-6">
+                  <p className="mb-6 text-lg text-white">
                     {currentQuestion.question_text}
                   </p>
 
@@ -367,11 +384,11 @@ export default function LiveQuizControl() {
                           
                           {questionStats && (
                             <div>
-                              <div className="flex justify-between text-sm text-slate-400 mb-1">
+                              <div className="flex justify-between mb-1 text-sm text-slate-400">
                                 <span>{answerCount} answers</span>
                                 <span>{percentage}%</span>
                               </div>
-                              <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
+                              <div className="w-full h-2 overflow-hidden rounded-full bg-slate-700">
                                 <motion.div
                                   initial={{ width: 0 }}
                                   animate={{ width: `${percentage}%` }}
@@ -388,21 +405,21 @@ export default function LiveQuizControl() {
                   </div>
 
                   {questionStats && (
-                    <div className="mt-6 grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-3 gap-4 mt-6">
                       <div className="text-center">
-                        <p className="text-slate-400 text-sm">Total Answers</p>
+                        <p className="text-sm text-slate-400">Total Answers</p>
                         <p className="text-2xl font-bold text-white">
                           {questionStats.total_answers}
                         </p>
                       </div>
                       <div className="text-center">
-                        <p className="text-slate-400 text-sm">Correct</p>
+                        <p className="text-sm text-slate-400">Correct</p>
                         <p className="text-2xl font-bold text-green-400">
                           {questionStats.correct_count}
                         </p>
                       </div>
                       <div className="text-center">
-                        <p className="text-slate-400 text-sm">Avg Time</p>
+                        <p className="text-sm text-slate-400">Avg Time</p>
                         <p className="text-2xl font-bold text-purple-400">
                           {questionStats.average_time?.toFixed(1)}s
                         </p>
@@ -420,10 +437,10 @@ export default function LiveQuizControl() {
                 animate={{ opacity: 1, y: 0 }}
               >
                 <Card className="p-12 text-center">
-                  <div className="w-20 h-20 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                  <div className="flex items-center justify-center w-20 h-20 mx-auto mb-4 bg-purple-500 rounded-full animate-pulse">
                     <Users size={40} className="text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-2">
+                  <h2 className="mb-2 text-2xl font-bold text-white">
                     Waiting for Quiz to Start
                   </h2>
                   <p className="text-slate-400">
@@ -442,28 +459,28 @@ export default function LiveQuizControl() {
               animate={{ opacity: 1, x: 0 }}
             >
               <Card className="p-6">
-                <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <h2 className="flex items-center gap-2 mb-4 text-xl font-bold text-white">
                   <Users className="text-purple-400" />
                   Participants ({participants.length})
                 </h2>
                 
-                <div className="space-y-2 max-h-96 overflow-y-auto">
+                <div className="space-y-2 overflow-y-auto max-h-96">
                   {participants.map((participant, index) => (
                     <motion.div
                       key={participant.id}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="flex items-center gap-3 p-3 bg-slate-800 rounded-lg"
+                      className="flex items-center gap-3 p-3 rounded-lg bg-slate-800"
                     >
-                      <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                      <div className="flex items-center justify-center w-10 h-10 font-bold text-white rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
                         {(participant.username || participant.nickname)?.[0]?.toUpperCase()}
                       </div>
                       <div className="flex-1">
-                        <p className="text-white font-medium">
+                        <p className="font-medium text-white">
                           {participant.username || participant.nickname}
                         </p>
-                        <p className="text-slate-400 text-sm">
+                        <p className="text-sm text-slate-400">
                           Score: {participant.score}
                         </p>
                       </div>
@@ -481,7 +498,7 @@ export default function LiveQuizControl() {
                 transition={{ delay: 0.2 }}
               >
                 <Card className="p-6">
-                  <h2 className="text-xl font-bold text-white mb-4">
+                  <h2 className="mb-4 text-xl font-bold text-white">
                     Live Leaderboard
                   </h2>
                   <LiveLeaderboard leaderboard={leaderboard} showPodium={false} />
