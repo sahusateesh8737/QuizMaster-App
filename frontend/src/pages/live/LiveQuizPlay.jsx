@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Clock, Check, X, Zap, Loader2 } from 'lucide-react'
@@ -31,6 +31,7 @@ export default function LiveQuizPlay() {
 
   const currentQuestion = currentSession?.current_question
   const startTime = currentSession?.current_question_start_time
+  const currentQuestionIdRef = useRef(null)
 
   // Poll for session updates
   useEffect(() => {
@@ -38,29 +39,43 @@ export default function LiveQuizPlay() {
     fetchLeaderboard(sessionId)
 
     const interval = setInterval(async () => {
-      const session = await fetchSession(sessionId)
-      await fetchLeaderboard(sessionId)
+      try {
+        const session = await fetchSession(sessionId)
+        await fetchLeaderboard(sessionId)
 
-      // Check if session ended
-      if (session && session.status === 'completed') {
-        navigate(`/live/results/${sessionId}`, {
-          state: { participantId }
-        })
-      }
+        console.log('LiveQuizPlay: Session status:', session?.status)
 
-      // Check if question changed
-      if (session && session.current_question?.id !== currentQuestion?.id) {
-        // New question, reset state
-        setSelectedOption(null)
-        setAnswered(false)
-        setAnswerResult(null)
-        setShowLeaderboard(false)
-        setTimeLeft(session.time_per_question || 30)
+        // Check if session ended
+        if (session && session.status === 'completed') {
+          console.log('LiveQuizPlay: Session completed, navigating to results')
+          clearInterval(interval)
+          navigate(`/live/results/${sessionId}`, {
+            state: { participantId }
+          })
+          return
+        }
+
+        // Check if question changed
+        if (session && session.current_question?.id && 
+            session.current_question.id !== currentQuestionIdRef.current) {
+          console.log('LiveQuizPlay: Question changed from', currentQuestionIdRef.current, 'to', session.current_question.id)
+          currentQuestionIdRef.current = session.current_question.id
+          
+          // New question, reset state
+          setSelectedOption(null)
+          setAnswered(false)
+          setAnswerResult(null)
+          setShowLeaderboard(false)
+          setTimeLeft(session.time_per_question || 30)
+        }
+      } catch (error) {
+        console.error('LiveQuizPlay: Error polling session:', error)
+        // Don't stop polling on error, just log it
       }
     }, 2000)
 
     return () => clearInterval(interval)
-  }, [sessionId, currentQuestion?.id])
+  }, [sessionId, participantId, navigate, fetchSession, fetchLeaderboard])
 
   // Countdown timer
   useEffect(() => {
