@@ -32,7 +32,7 @@ export default function ManageQuizzesPage() {
       setLoading(true)
       const token = localStorage.getItem('access_token')
       
-      let url = `http://localhost:8000/api/quizzes/?creator=${user.id}`
+      let url = `${getApiUrl()}/quizzes/?creator=${user.id}`
       if (filter === 'published') {
         url += '&is_published=true'
       } else if (filter === 'draft') {
@@ -60,7 +60,7 @@ export default function ManageQuizzesPage() {
   const togglePublish = async (quizId, currentStatus) => {
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch(`http://localhost:8000/api/quizzes/${quizId}/`, {
+      const response = await fetch(`${getApiUrl()}/quizzes/${quizId}/`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export default function ManageQuizzesPage() {
       const token = localStorage.getItem('access_token')
       
       // Fetch original quiz
-      const quizResponse = await fetch(`http://localhost:8000/api/quizzes/${quizId}/`, {
+      const quizResponse = await fetch(`${getApiUrl()}/quizzes/${quizId}/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -122,7 +122,7 @@ export default function ManageQuizzesPage() {
         const created = await createResponse.json()
         
         // Fetch and duplicate questions
-        const questionsResponse = await fetch(`http://localhost:8000/api/quizzes/${quizId}/questions/`, {
+        const questionsResponse = await fetch(`${getApiUrl()}/quizzes/${quizId}/questions/`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -141,7 +141,7 @@ export default function ManageQuizzesPage() {
             delete newQuestion.created_at
             delete newQuestion.updated_at
             
-            await fetch(`http://localhost:8000/api/quizzes/${created.id}/questions/`, {
+            await fetch(`${getApiUrl()}/quizzes/${created.id}/questions/`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ export default function ManageQuizzesPage() {
   const deleteQuiz = async (quizId) => {
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch(`http://localhost:8000/api/quizzes/${quizId}/`, {
+      const response = await fetch(`${getApiUrl()}/quizzes/${quizId}/`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

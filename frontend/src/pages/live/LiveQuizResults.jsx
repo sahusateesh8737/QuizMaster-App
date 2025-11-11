@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import getApiUrl from '../../utils/apiConfig'
+
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import confetti from 'canvas-confetti'
@@ -39,7 +41,7 @@ export default function LiveQuizResults() {
     try {
       const token = localStorage.getItem('access_token')
       const response = await fetch(
-        `http://localhost:8000/api/live/sessions/${sessionId}/`,
+        `${getApiUrl()}/live/sessions/${sessionId}/`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,

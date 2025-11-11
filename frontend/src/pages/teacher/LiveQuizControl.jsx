@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import getApiUrl from '../../utils/apiConfig'
+
 import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { 
@@ -49,7 +51,7 @@ export default function LiveQuizControl() {
   const fetchSessionData = async () => {
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch(`http://localhost:8000/api/live/sessions/${sessionId}/`, {
+      const response = await fetch(`${getApiUrl()}/live/sessions/${sessionId}/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -79,7 +81,7 @@ export default function LiveQuizControl() {
     try {
       const token = localStorage.getItem('access_token')
       const response = await fetch(
-        `http://localhost:8000/api/live/sessions/${sessionId}/question_stats/?question_id=${questionId}`,
+        `${getApiUrl()}/live/sessions/${sessionId}/question_stats/?question_id=${questionId}`,
         {
           headers: {
             'Authorization': `Bearer ${token}`,

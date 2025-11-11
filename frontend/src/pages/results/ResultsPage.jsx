@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import getApiUrl from '../../utils/apiConfig'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -27,7 +28,7 @@ export default function ResultsPage() {
   useEffect(() => {
     const fetchAttemptResult = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/quizzes/attempts/${id}/`, {
+        const response = await fetch(`${getApiUrl()}/quizzes/attempts/${id}/`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
           },

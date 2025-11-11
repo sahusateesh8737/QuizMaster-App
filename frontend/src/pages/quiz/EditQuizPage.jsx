@@ -64,7 +64,7 @@ export default function EditQuizPage() {
       const token = localStorage.getItem('access_token')
       
       // Fetch quiz details
-      const quizResponse = await fetch(`http://localhost:8000/api/quizzes/${id}/`, {
+      const quizResponse = await fetch(`${getApiUrl()}/quizzes/${id}/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -94,7 +94,7 @@ export default function EditQuizPage() {
       })
       
       // Fetch questions
-      const questionsResponse = await fetch(`http://localhost:8000/api/quizzes/${id}/questions/`, {
+      const questionsResponse = await fetch(`${getApiUrl()}/quizzes/${id}/questions/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -172,7 +172,7 @@ export default function EditQuizPage() {
     if (question.id) {
       try {
         const token = localStorage.getItem('access_token')
-        const response = await fetch(`http://localhost:8000/api/quizzes/${id}/questions/${question.id}/`, {
+        const response = await fetch(`${getApiUrl()}/quizzes/${id}/questions/${question.id}/`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -253,7 +253,7 @@ export default function EditQuizPage() {
       const token = localStorage.getItem('access_token')
       
       // Update quiz
-      const quizResponse = await fetch(`http://localhost:8000/api/quizzes/${id}/`, {
+      const quizResponse = await fetch(`${getApiUrl()}/quizzes/${id}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -277,7 +277,7 @@ export default function EditQuizPage() {
         
         if (questions[i].id) {
           // Update existing question
-          const response = await fetch(`http://localhost:8000/api/quizzes/${id}/questions/${questions[i].id}/`, {
+          const response = await fetch(`${getApiUrl()}/quizzes/${id}/questions/${questions[i].id}/`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -291,7 +291,7 @@ export default function EditQuizPage() {
           }
         } else {
           // Create new question
-          const response = await fetch(`http://localhost:8000/api/quizzes/${id}/questions/`, {
+          const response = await fetch(`${getApiUrl()}/quizzes/${id}/questions/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

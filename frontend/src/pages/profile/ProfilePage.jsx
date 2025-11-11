@@ -59,7 +59,7 @@ export default function ProfilePage() {
     setHistoryLoading(true)
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch(`http://localhost:8000/api/results/user-attempts/`, {
+      const response = await fetch(`${getApiUrl()}/results/user-attempts/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
