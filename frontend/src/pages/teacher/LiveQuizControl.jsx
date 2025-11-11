@@ -139,10 +139,24 @@ export default function LiveQuizControl() {
   }
 
   const handleNext = async () => {
-    const success = await nextQuestion(parseInt(sessionId))
-    if (success) {
-      setQuestionStats(null)
-      fetchSessionData()
+    try {
+      const result = await nextQuestion(parseInt(sessionId))
+      console.log('Next question result:', result)
+      
+      // Check if quiz completed (no more questions)
+      if (result && result.session && result.session.status === 'completed') {
+        console.log('Quiz completed, navigating to results')
+        navigate(`/live/results/${sessionId}`)
+        return
+      }
+      
+      // If there are more questions, reset stats and fetch data
+      if (result) {
+        setQuestionStats(null)
+        fetchSessionData()
+      }
+    } catch (error) {
+      console.error('Error moving to next question:', error)
     }
   }
 

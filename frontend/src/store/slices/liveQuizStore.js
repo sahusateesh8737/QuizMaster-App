@@ -79,11 +79,17 @@ export const useLiveQuizStore = create((set, get) => ({
       if (!response.ok) throw new Error('Failed to go to next question')
 
       const data = await response.json()
+      console.log('Next question response:', data)
+      
+      // Update session with new data
+      const sessionData = data.session || data
       set({ 
-        currentSession: data.session || data, 
+        currentSession: sessionData, 
         questionStartTime: new Date(), 
         loading: false 
       })
+      
+      // Return the full response (includes 'session' key when completed)
       return data
     } catch (error) {
       set({ error: error.message, loading: false })
