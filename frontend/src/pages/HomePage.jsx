@@ -30,11 +30,9 @@ const itemVariants = {
 }
 
 export default function HomePage() {
-  const [quizzes, setQuizzes] = useState([])
   const [loading, setLoading] = useState(true)
   const [featured, setFeatured] = useState([])
   const [categories, setCategories] = useState([])
-  const [recentQuizzes, setRecentQuizzes] = useState([])
   const [stats, setStats] = useState({
     total_quizzes: 0,
     total_users: 0,
@@ -51,9 +49,7 @@ export default function HomePage() {
       // Fetch quizzes
       const quizData = await quizService.getQuizzes()
       const quizList = Array.isArray(quizData) ? quizData : quizData.results || []
-      setQuizzes(quizList.slice(0, 3))
       setFeatured(quizList.slice(0, 6))
-      setRecentQuizzes(quizList.slice(0, 4))
       
       // Fetch categories
       try {
@@ -268,7 +264,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="grid grid-cols-2 md:grid-cols-4 gap-4"
             >
-              {categories.map((category, idx) => (
+              {categories.map((category) => (
                 <motion.div key={category.id} variants={itemVariants}>
                   <Link to={`/quizzes?category=${category.id}`}>
                     <Card className="text-center hover:shadow-2xl hover:border-purple-500/50 transition-all cursor-pointer">
@@ -315,7 +311,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             >
-              {featured.map((quiz, idx) => (
+              {featured.map((quiz) => (
                 <motion.div key={quiz.id} variants={itemVariants}>
                   <Link to={`/quizzes/${quiz.id}`}>
                     <Card>
@@ -333,7 +329,7 @@ export default function HomePage() {
                           </Badge>
                         )}
                         <Badge variant="blue" size="sm">
-                          {quiz.questions_count || 0} Q's
+                          {quiz.questions_count || 0} Q&apos;s
                         </Badge>
                       </div>
                       <div className="flex justify-between items-center text-sm text-slate-400">

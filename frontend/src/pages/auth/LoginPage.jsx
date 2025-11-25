@@ -37,8 +37,16 @@ export default function LoginPage() {
     setLoading(true)
     try {
       await login(formData.username, formData.password)
+      const user = useAuthStore.getState().user
       setAlert({ type: 'success', message: 'Login successful! Redirecting...' })
-      setTimeout(() => navigate('/quizzes'), 1500)
+      
+      setTimeout(() => {
+        if (user?.role === 'admin' || user?.is_staff) {
+          navigate('/admin/dashboard')
+        } else {
+          navigate('/quizzes')
+        }
+      }, 1500)
     } catch (error) {
       setAlert({
         type: 'error',
@@ -170,7 +178,7 @@ export default function LoginPage() {
 
         {/* Signup Link */}
         <p className="text-center text-slate-400">
-          Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
           <Link to="/auth/signup" className="text-purple-400 hover:text-purple-300 font-semibold">
             Sign up now
           </Link>

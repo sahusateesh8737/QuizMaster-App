@@ -46,7 +46,7 @@ class LiveQuizSessionViewSet(viewsets.ModelViewSet):
                 # Teachers see their own sessions
                 return LiveQuizSession.objects.filter(host=self.request.user)
         # Public view - only active sessions
-        return LiveQuizSession.objects.filter(status__in=['waiting', 'in_progress'])
+        return LiveQuizSession.objects.filter(status__in=['waiting', 'in_progress', 'completed'])
     
     def perform_create(self, serializer):
         """Create a new live quiz session."""

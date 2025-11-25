@@ -72,7 +72,7 @@ export default function ResendVerificationPage() {
               </h1>
               
               <p className="text-slate-400 mb-8">
-                We've sent a verification link to <strong className="text-white">{email}</strong>.
+                We&apos;ve sent a verification link to <strong className="text-white">{email}</strong>.
                 Please check your inbox and click the link to verify your email address.
               </p>
 
@@ -95,7 +95,7 @@ export default function ResendVerificationPage() {
 
               <div className="mt-6 p-4 bg-slate-800 rounded-lg">
                 <p className="text-sm text-slate-400">
-                  Didn't receive the email? Check your spam folder or try resending.
+                If you still can&apos;t find the email, check your spam folder or try resending.
                 </p>
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function ResendVerificationPage() {
               Resend Verification Email
             </h1>
             <p className="text-slate-400">
-              Enter your email address and we'll send you a new verification link
+              Enter your email address and we&apos;ll send you a new verification link
             </p>
           </div>
 

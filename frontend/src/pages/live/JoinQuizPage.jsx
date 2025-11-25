@@ -74,7 +74,7 @@ export default function JoinQuizPage() {
                 Join Live Quiz
               </h1>
               <p className="text-slate-400">
-                Enter the code provided by your teacher
+                Enter the code provided by your teacher to join the live quiz session. You&apos;ll need to wait for the teacher to start the game.
               </p>
             </div>
 
@@ -146,10 +146,10 @@ export default function JoinQuizPage() {
             {/* Nickname Input */}
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-white mb-2">
-                What's your name?
+                What&apos;s your name?
               </h2>
               <p className="text-slate-400">
-                This is how you'll appear to others
+                This is how you&apos;ll appear to others
               </p>
             </div>
 
@@ -203,7 +203,7 @@ export default function JoinQuizPage() {
 
         {/* Info */}
         <p className="text-center text-slate-400 text-sm mt-6">
-          Don't have a code?{' '}
+          Don&apos;t have a code?{' '}
           <button
             onClick={() => navigate('/quizzes')}
             className="text-purple-400 hover:text-purple-300 underline"

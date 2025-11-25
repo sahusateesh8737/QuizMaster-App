@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Search, Filter, Clock, BookOpen, TrendingUp, SortAsc, Plus, Grid, List } from 'lucide-react'
@@ -21,14 +21,12 @@ export default function QuizzesPage() {
   const [difficulty, setDifficulty] = useState('all')
   const [sortBy, setSortBy] = useState('newest')
   const [viewMode, setViewMode] = useState('list')
-  const [filteredQuizzes, setFilteredQuizzes] = useState([])
-
   useEffect(() => {
     getCategories()
     getQuizzes()
   }, [])
 
-  useEffect(() => {
+  const filteredQuizzes = useMemo(() => {
     let filtered = quizzes
 
     if (searchTerm) {
@@ -67,7 +65,7 @@ export default function QuizzesPage() {
       }
     })
 
-    setFilteredQuizzes(filtered)
+    return filtered
   }, [quizzes, searchTerm, selectedCategory, difficulty, sortBy])
 
   const handleSearch = async (e) => {

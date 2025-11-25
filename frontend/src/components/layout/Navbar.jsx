@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Menu, X, LogOut, User, LogIn } from 'lucide-react'
+import { Menu, X, LogOut, User, LogIn, Shield } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useAuthStore } from '../../store/slices/authStore'
 
@@ -23,8 +23,10 @@ export default function Navbar() {
 
   const navItems = [
     { name: 'Home', href: '/' },
-    { name: 'Quizzes', href: '/quizzes' },
-    { name: 'Leaderboard', href: '/leaderboard' },
+    ...(user?.role !== 'admin' && !user?.is_staff ? [
+      { name: 'Quizzes', href: '/quizzes' },
+      { name: 'Leaderboard', href: '/leaderboard' },
+    ] : []),
     ...(user?.role === 'teacher' ? [{ name: 'Live Quiz', href: '/teacher/dashboard' }] : []),
     ...(user?.role === 'student' ? [{ name: 'Join Quiz', href: '/join' }] : []),
   ]
@@ -76,6 +78,15 @@ export default function Navbar() {
                   <User size={20} />
                   <span>{user?.username || 'Profile'}</span>
                 </Link>
+                {(user?.role === 'admin' || user?.is_staff) && (
+                  <Link
+                    to="/admin/dashboard"
+                    className="flex items-center space-x-2 text-slate-300 hover:text-white transition-colors"
+                  >
+                    <Shield size={20} />
+                    <span>Admin Control Panel</span>
+                  </Link>
+                )}
                 <button
                   onClick={() => {
                     logout()

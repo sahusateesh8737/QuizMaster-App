@@ -40,6 +40,8 @@ Contains:
 | File | Size | Time | Purpose |
 |------|------|------|---------|
 | [LOAD_TEST_GUIDE.md](LOAD_TEST_GUIDE.md) | 4.4KB | 10 min | How to run load tests |
+| [API_TESTING_README.md](API_TESTING_README.md) | 15KB | 15 min | Postman API testing guide |
+| [POSTMAN_TESTING_GUIDE.md](POSTMAN_TESTING_GUIDE.md) | 25KB | 30 min | Complete Postman guide |
 | [SESSION_SUMMARY.md](SESSION_SUMMARY.md) | 7.9KB | 15 min | What was built today |
 | [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) | 12KB | 20 min | Pre-launch verification |
 
@@ -47,6 +49,9 @@ Contains:
 | File | Size | Time | Purpose |
 |------|------|------|---------|
 | [COMPLETE_SUMMARY.md](COMPLETE_SUMMARY.md) | 11KB | 30 min | Everything explained |
+| [API_QUICK_REFERENCE.md](API_QUICK_REFERENCE.md) | 8KB | 10 min | API endpoints quick lookup |
+| [API_ARCHITECTURE_DIAGRAM.md](API_ARCHITECTURE_DIAGRAM.md) | 12KB | 15 min | API structure & flows |
+| [SAMPLE_TEST_DATA.md](SAMPLE_TEST_DATA.md) | 18KB | 20 min | Ready-to-use test data |
 | [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) | 13KB | 15 min | Find what you need |
 
 ### 🟣 Technical Deep Dive
@@ -98,6 +103,12 @@ tester.printSummary()
 2. Copy `QUICK_LOAD_TEST.js`
 3. Paste in console: `await tester.test100Users()`
 
+### "I want to test all backend APIs"
+1. [API_TESTING_README.md](API_TESTING_README.md) - Overview & quick start
+2. Import `QuizMaster_API_Collection.postman_collection.json` to Postman
+3. [POSTMAN_TESTING_GUIDE.md](POSTMAN_TESTING_GUIDE.md) - Complete guide
+4. [SAMPLE_TEST_DATA.md](SAMPLE_TEST_DATA.md) - Test data
+
 ### "I want to understand what was built"
 1. [SESSION_SUMMARY.md](SESSION_SUMMARY.md) - Overview
 2. [COMPLETE_SUMMARY.md](COMPLETE_SUMMARY.md) - Details
@@ -105,8 +116,9 @@ tester.printSummary()
 
 ### "I want technical architecture details"
 1. [REAL_TIME_IMPLEMENTATION_PLAN.md](REAL_TIME_IMPLEMENTATION_PLAN.md)
-2. [WEBSOCKET_DEPLOYMENT_GUIDE.md](WEBSOCKET_DEPLOYMENT_GUIDE.md)
-3. [COMPLETE_SUMMARY.md](COMPLETE_SUMMARY.md)
+2. [API_ARCHITECTURE_DIAGRAM.md](API_ARCHITECTURE_DIAGRAM.md) - API structure
+3. [WEBSOCKET_DEPLOYMENT_GUIDE.md](WEBSOCKET_DEPLOYMENT_GUIDE.md)
+4. [COMPLETE_SUMMARY.md](COMPLETE_SUMMARY.md)
 
 ### "I want to deploy this"
 1. [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md)
@@ -115,8 +127,9 @@ tester.printSummary()
 
 ### "I want to learn visually"
 1. [VISUAL_GUIDE.md](VISUAL_GUIDE.md) - Diagrams
-2. [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - Tables
-3. [COMPLETE_SUMMARY.md](COMPLETE_SUMMARY.md) - Architecture diagram
+2. [API_ARCHITECTURE_DIAGRAM.md](API_ARCHITECTURE_DIAGRAM.md) - API flows
+3. [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - Tables
+4. [COMPLETE_SUMMARY.md](COMPLETE_SUMMARY.md) - Architecture diagram
 
 ---
 
@@ -245,6 +258,12 @@ Done!
 ### 🧪 Load Testing Tools
 - ✅ `QUICK_LOAD_TEST.js` - Simple 3-method tester
 - ✅ `load-test-script.js` - Advanced 6-method suite
+
+### 🔧 API Testing Tools
+- ✅ Postman Collection - 60+ API requests
+- ✅ Complete testing guide
+- ✅ Sample test data
+- ✅ Quick reference sheet
 
 ### 📚 Documentation
 - ✅ `QUICK_REFERENCE.md` - 5-minute start

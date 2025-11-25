@@ -188,7 +188,7 @@ export default function LiveQuizControl() {
           </div>
           <h2 className="mb-2 text-2xl font-bold text-white">Session Not Found</h2>
           <p className="mb-6 text-slate-400">
-            This live quiz session doesn't exist or has been deleted.
+            This live quiz session doesn&apos;t exist or has been deleted.
           </p>
           <button
             onClick={() => navigate('/teacher/dashboard')}
@@ -335,7 +335,7 @@ export default function LiveQuizControl() {
                 {isWaiting && currentSession.participant_count === 0 && (
                   <div className="flex items-center gap-2 p-3 mt-4 text-sm text-yellow-400 border rounded-lg bg-yellow-500/10 border-yellow-500/20">
                     <AlertCircle size={16} />
-                    Waiting for participants to join...
+                    Waiting for players to join... Share the code below with your students. Once everyone is in, click &apos;Start Quiz&apos; to begin.
                   </div>
                 )}
               </Card>

@@ -37,7 +37,7 @@ const authService = {
   // Get Current User
   getCurrentUser: async () => {
     try {
-      const response = await apiClient.get('/users/users/me/')
+      const response = await apiClient.get('/users/me/')
       return response.data
     } catch (error) {
       throw error.response?.data || error.message

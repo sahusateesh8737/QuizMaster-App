@@ -115,11 +115,13 @@ class QuizAttemptSerializer(serializers.ModelSerializer):
     answers = UserAnswerSerializer(many=True, read_only=True)
     quiz_title = serializers.CharField(source='quiz.title', read_only=True)
     
+    total_questions = serializers.IntegerField(source='quiz.questions.count', read_only=True)
+    
     class Meta:
         model = QuizAttempt
         fields = (
             'id', 'quiz', 'quiz_title', 'user', 'status', 'score', 'percentage', 'is_passed',
-            'start_time', 'end_time', 'time_spent', 'answers'
+            'start_time', 'end_time', 'time_spent', 'answers', 'total_questions'
         )
         read_only_fields = ('id', 'user', 'start_time')
 

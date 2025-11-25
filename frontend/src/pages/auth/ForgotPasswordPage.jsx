@@ -72,7 +72,7 @@ export default function ForgotPasswordPage() {
               </h1>
               
               <p className="text-slate-400 mb-8">
-                We've sent a password reset link to <strong className="text-white">{email}</strong>.
+                We&apos;ve sent a password reset link to <strong className="text-white">{email}</strong>.
                 Please check your inbox and click the link to reset your password.
               </p>
 
@@ -95,7 +95,7 @@ export default function ForgotPasswordPage() {
 
               <div className="mt-6 p-4 bg-slate-800 rounded-lg">
                 <p className="text-sm text-slate-400">
-                  Didn't receive the email? Check your spam folder or try resending. 
+                  Didn&apos;t receive the email? Check your spam folder or try resending. 
                   The reset link is valid for 1 hour.
                 </p>
               </div>
@@ -132,7 +132,7 @@ export default function ForgotPasswordPage() {
               Forgot Password?
             </h1>
             <p className="text-slate-400">
-              No worries! Enter your email and we'll send you reset instructions.
+              No worries! Enter your email and we&apos;ll send you reset instructions.
             </p>
           </div>
 

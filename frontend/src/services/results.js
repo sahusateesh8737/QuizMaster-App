@@ -14,7 +14,7 @@ const resultsService = {
   // Get result detail
   getResultDetail: async (id) => {
     try {
-      const response = await apiClient.get(`/results/${id}/`)
+      const response = await apiClient.get(`/quizzes/attempts/${id}/`)
       return response.data
     } catch (error) {
       throw error.response?.data || error.message

@@ -75,7 +75,7 @@ export default function WaitingRoom() {
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Session Not Found</h2>
           <p className="text-slate-400 mb-6">
-            This quiz session doesn't exist or has been ended. Please check your join code and try again.
+            This quiz session doesn&apos;t exist or has been ended. Please check your join code and try again.
           </p>
           <button
             onClick={() => navigate('/join')}

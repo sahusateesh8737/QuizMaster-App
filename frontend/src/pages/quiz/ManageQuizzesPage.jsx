@@ -407,7 +407,7 @@ export default function ManageQuizzesPage() {
               Delete Quiz?
             </h3>
             <p className="text-slate-400 mb-6">
-              Are you sure you want to delete "{deleteModal.title}"? This action cannot be undone.
+              Are you sure you want to delete &quot;{deleteModal.title}&quot;? This action cannot be undone.
             </p>
             <div className="flex gap-3">
               <Button

@@ -66,10 +66,19 @@ export default function SignupPage() {
       })
       setTimeout(() => navigate('/auth/login'), 2000)
     } catch (error) {
+      let errorMessage = 'An error occurred. Please try again.'
+      if (error.detail) {
+        errorMessage = error.detail
+      } else if (typeof error === 'object') {
+        // Get the first error message from the object
+        const firstError = Object.values(error)[0]
+        errorMessage = Array.isArray(firstError) ? firstError[0] : firstError
+      }
+
       setAlert({
         type: 'error',
         title: 'Signup Failed',
-        message: error.email ? error.email[0] : 'An error occurred. Please try again.',
+        message: errorMessage,
       })
     } finally {
       setLoading(false)

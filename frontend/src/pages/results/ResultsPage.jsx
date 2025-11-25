@@ -51,7 +51,7 @@ export default function ResultsPage() {
           id: attemptData.id,
           quiz_title: attemptData.quiz_title,
           score: Math.round(attemptData.percentage || 0),
-          total_questions: attemptData.answers?.length || 0,
+          total_questions: attemptData.total_questions || attemptData.answers?.length || 0,
           correct_answers: attemptData.score || 0,
           time_taken: timeTaken,
           pass: attemptData.is_passed,
@@ -273,7 +273,7 @@ export default function ResultsPage() {
             variants={itemVariants}
             className="mt-12 p-6 rounded-xl bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/30"
           >
-            <h3 className="text-lg font-bold text-white mb-3">What's Next?</h3>
+            <h3 className="text-lg font-bold text-white mb-3">What&apos;s Next?</h3>
             <ul className="space-y-2 text-slate-300">
               <li className="flex gap-2">
                 <span>✓</span>

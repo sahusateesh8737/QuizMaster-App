@@ -148,7 +148,7 @@ export default function LiveQuizResults() {
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">Session Not Found</h2>
           <p className="text-slate-400 mb-6">
-            This quiz session doesn't exist or has been deleted.
+            This quiz session doesn&apos;t exist or has been deleted.
           </p>
           <button
             onClick={() => navigate('/')}
@@ -267,6 +267,7 @@ export default function LiveQuizResults() {
           className="mb-12"
         >
           <Card className="p-8">
+            <h3 className="text-lg font-bold text-white mb-3">What&apos;s Next?</h3>
             <h2 className="text-3xl font-bold text-white mb-8 text-center">
               Final Rankings
             </h2>

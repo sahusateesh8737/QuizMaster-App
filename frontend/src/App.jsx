@@ -26,6 +26,7 @@ import JoinQuizPage from './pages/live/JoinQuizPage'
 import WaitingRoom from './pages/live/WaitingRoom'
 import LiveQuizPlay from './pages/live/LiveQuizPlay'
 import LiveQuizResults from './pages/live/LiveQuizResults'
+import AdminDashboard from './pages/admin/AdminDashboard'
 import './App.css'
 
 function App() {
@@ -61,6 +62,9 @@ function App() {
             <Route path="/live/waiting/:sessionId" element={<WaitingRoom />} />
             <Route path="/live/play/:sessionId" element={<LiveQuizPlay />} />
             <Route path="/live/results/:sessionId" element={<LiveQuizResults />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
             
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

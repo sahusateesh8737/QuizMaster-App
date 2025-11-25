@@ -4,7 +4,7 @@ export default function Card({
   children,
   className = '',
   hover = true,
-  onClick,
+  onClick = undefined,
   ...props
 }) {
   return (

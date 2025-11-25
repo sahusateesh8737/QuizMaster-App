@@ -16,27 +16,30 @@ export default function TeacherDashboard() {
   const [activeSessions, setActiveSessions] = useState([])
 
   useEffect(() => {
-    getQuizzes()
-    // Fetch active sessions
-    fetchActiveSessions()
-  }, [])
+    let mounted = true
 
-  const fetchActiveSessions = async () => {
-    try {
-      const token = localStorage.getItem('access_token')
-      const response = await fetch(`${getApiUrl()}/live/sessions/`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      })
-      if (response.ok) {
-        const data = await response.json()
-        setActiveSessions(data.results || data)
+    const fetchSessions = async () => {
+      try {
+        const token = localStorage.getItem('access_token')
+        const response = await fetch(`${getApiUrl()}/live/sessions/`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        })
+        if (response.ok && mounted) {
+          const data = await response.json()
+          setActiveSessions(data.results || data)
+        }
+      } catch (error) {
+        console.error('Error fetching sessions:', error)
       }
-    } catch (error) {
-      console.error('Error fetching sessions:', error)
     }
-  }
+
+    getQuizzes()
+    fetchSessions()
+
+    return () => { mounted = false }
+  }, [getQuizzes])
 
   if (loading) {
     return (
@@ -150,7 +153,7 @@ export default function TeacherDashboard() {
           {quizzes.length === 0 ? (
             <Card className="p-12 text-center">
               <p className="text-slate-400 mb-4">
-                You haven't created any quizzes yet.
+                You haven&apos;t created any quizzes yet.
               </p>
               <Button
                 onClick={() => navigate('/quizzes/create')}
