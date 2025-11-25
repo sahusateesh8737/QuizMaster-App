@@ -3,7 +3,7 @@ Vercel deployment settings for quiz project.
 """
 
 import os
-from .base import *
+from .base import *  # noqa: F403
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
@@ -91,12 +91,12 @@ else:
 
 # Static files configuration for Vercel
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # noqa: F405
 STATICFILES_DIRS = []
 
 # Media files configuration (use external storage for production)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # noqa: F405
 
 # Security settings (relaxed for serverless)
 SECURE_SSL_REDIRECT = False  # Vercel handles SSL

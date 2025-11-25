@@ -2,7 +2,7 @@
 Development settings for quiz project.
 """
 
-from .base import *
+from .base import *  # noqa: F403
 
 # Development settings override
 DEBUG = True
@@ -12,7 +12,7 @@ ALLOWED_HOSTS = ['*']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # noqa: F405
     }
 }
 

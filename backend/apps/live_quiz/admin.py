@@ -15,7 +15,7 @@ class LiveQuizParticipantAdmin(admin.ModelAdmin):
     list_display = ['get_name', 'session', 'score', 'correct_answers', 'status', 'joined_at']
     list_filter = ['status', 'joined_at']
     search_fields = ['user__username', 'nickname', 'session__join_code']
-    
+
     def get_name(self, obj):
         return obj.user.username if obj.user else obj.nickname
     get_name.short_description = 'Name'

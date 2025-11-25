@@ -25,7 +25,8 @@ class QuestionAdmin(admin.ModelAdmin):
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
-    list_display = ['title', 'creator', 'category', 'status', 'total_attempts', 'average_score']
+    list_display = ('quiz', 'user', 'score', 'completed_at', 'passed',
+                    'total_questions', 'average_score')
     list_filter = ['status', 'category', 'created_at', 'shuffle_questions']
     search_fields = ['title', 'description', 'creator__email']
     readonly_fields = ['total_attempts', 'total_passes', 'average_score', 'created_at', 'updated_at']

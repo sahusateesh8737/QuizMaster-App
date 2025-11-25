@@ -1,10 +1,10 @@
 import os
-import sys
+
 
 # Set the Django settings module for Vercel
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.vercel')
 
-from django.core.wsgi import get_wsgi_application
+from django.core.wsgi import get_wsgi_application  # noqa: E402
 
 application = get_wsgi_application()
 

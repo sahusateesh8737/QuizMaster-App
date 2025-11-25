@@ -1,9 +1,9 @@
 import os
 import django
-from django.conf import settings
+
 
 # Setup Django environment
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production') 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
 # Note: User might need to change this to 'config.settings.vercel' if on Vercel
 # But usually DJANGO_SETTINGS_MODULE is set in env vars.
 
@@ -15,7 +15,7 @@ except Exception as e:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.development')
     django.setup()
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model  # noqa: E402
 
 def create_admin():
     User = get_user_model()
@@ -35,7 +35,7 @@ def create_admin():
             user.set_password(password)
             user.save()
             print("Admin password updated.")
-            
+
     except Exception as e:
         print(f"Error creating admin: {e}")
 

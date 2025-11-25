@@ -2,7 +2,7 @@
 Common settings for quiz project.
 """
 
-import os
+
 from pathlib import Path
 from datetime import timedelta
 from decouple import config, Csv
@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Third-party apps
     'rest_framework',
     'rest_framework_simplejwt',
@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'storages',
     'django_celery_beat',
     'django_celery_results',
-    
+
     # Local apps
     'apps.users.apps.UsersConfig',
     'apps.quizzes.apps.QuizzesConfig',
@@ -190,10 +190,10 @@ if USE_S3:
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
     AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
     AWS_DEFAULT_ACL = 'public-read'
-    
+
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
     STATIC_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    
+
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
     MEDIA_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
@@ -202,7 +202,7 @@ SENTRY_DSN = config('SENTRY_DSN', default=None)
 if SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
-    
+
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         integrations=[DjangoIntegration()],

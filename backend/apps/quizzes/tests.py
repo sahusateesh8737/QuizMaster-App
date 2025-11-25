@@ -77,23 +77,23 @@ class TestQuizFlow:
         client.force_authenticate(user=user)
         # Start attempt
         attempt = QuizAttempt.objects.create(quiz=quiz, user=user, status='in_progress')
-        
+
         url = f'/api/quizzes/attempts/{attempt.id}/submit_answer/'
         correct_option = question.options.get(is_correct=True)
-        
+
         data = {
             'question_id': question.id,
             'selected_option_id': correct_option.id
         }
-        
+
         response = client.post(url, data)
         assert response.status_code == status.HTTP_200_OK
-        assert response.data['is_correct'] == True
+        assert response.data['is_correct'] is True
 
     def test_complete_quiz(self, client, user, quiz, question):
         client.force_authenticate(user=user)
         attempt = QuizAttempt.objects.create(quiz=quiz, user=user, status='in_progress')
-        
+
         # Submit correct answer
         from .models import UserAnswer
         correct_option = question.options.get(is_correct=True)
@@ -103,11 +103,11 @@ class TestQuizFlow:
             selected_option=correct_option,
             is_correct=True
         )
-        
+
         url = f'/api/quizzes/attempts/{attempt.id}/complete/'
         response = client.post(url)
-        
+
         assert response.status_code == status.HTTP_200_OK
         assert response.data['status'] == 'completed'
         assert response.data['score'] == 1
-        assert response.data['is_passed'] == True
+        assert response.data['is_passed'] is True

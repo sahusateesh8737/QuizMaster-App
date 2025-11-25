@@ -6,7 +6,7 @@ from .models import User, UserProfile, EmailVerificationToken
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     """Custom user admin."""
-    
+
     fieldsets = BaseUserAdmin.fieldsets + (
         ('Custom Fields', {'fields': ('bio', 'avatar', 'role', 'is_email_verified', 'points', 'badges')}),
     )
@@ -19,7 +19,7 @@ class UserAdmin(BaseUserAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     """User profile admin."""
-    
+
     list_display = ['user', 'created_at', 'updated_at']
     list_filter = ['created_at']
     search_fields = ['user__email']
@@ -29,7 +29,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 @admin.register(EmailVerificationToken)
 class EmailVerificationTokenAdmin(admin.ModelAdmin):
     """Email verification token admin."""
-    
+
     list_display = ['user', 'created_at', 'expires_at']
     list_filter = ['created_at', 'expires_at']
     search_fields = ['user__email', 'token']

@@ -1,16 +1,16 @@
 from rest_framework import serializers
 from .models import LiveQuizSession, LiveQuizParticipant, LiveQuizAnswer, LiveQuizQuestionResult
-from apps.quizzes.serializers import QuizSerializer, QuestionSerializer
+from apps.quizzes.serializers import QuestionSerializer
 
 
 class LiveQuizSessionSerializer(serializers.ModelSerializer):
     """Serializer for live quiz sessions."""
-    
+
     quiz_title = serializers.CharField(source='quiz.title', read_only=True)
     host_name = serializers.CharField(source='host.get_full_name', read_only=True)
     participant_count = serializers.SerializerMethodField()
     current_question = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = LiveQuizSession
         fields = (
@@ -21,10 +21,10 @@ class LiveQuizSessionSerializer(serializers.ModelSerializer):
             'participant_count', 'current_question'
         )
         read_only_fields = ('id', 'join_code', 'host', 'created_at', 'started_at', 'ended_at', 'total_participants')
-    
+
     def get_participant_count(self, obj):
         return obj.participants.filter(status='active').count()
-    
+
     def get_current_question(self, obj):
         question = obj.get_current_question()
         if question:
@@ -34,10 +34,10 @@ class LiveQuizSessionSerializer(serializers.ModelSerializer):
 
 class LiveQuizParticipantSerializer(serializers.ModelSerializer):
     """Serializer for live quiz participants."""
-    
+
     display_name = serializers.SerializerMethodField()
     avatar = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = LiveQuizParticipant
         fields = (
@@ -46,10 +46,10 @@ class LiveQuizParticipantSerializer(serializers.ModelSerializer):
             'last_answer_time', 'joined_at'
         )
         read_only_fields = ('id', 'joined_at', 'last_answer_time')
-    
+
     def get_display_name(self, obj):
         return obj.user.username if obj.user else obj.nickname
-    
+
     def get_avatar(self, obj):
         if obj.user and obj.user.avatar:
             return obj.user.avatar.url
@@ -58,7 +58,7 @@ class LiveQuizParticipantSerializer(serializers.ModelSerializer):
 
 class LiveQuizAnswerSerializer(serializers.ModelSerializer):
     """Serializer for live quiz answers."""
-    
+
     class Meta:
         model = LiveQuizAnswer
         fields = (
@@ -70,7 +70,7 @@ class LiveQuizAnswerSerializer(serializers.ModelSerializer):
 
 class SubmitLiveAnswerSerializer(serializers.Serializer):
     """Serializer for submitting an answer during live quiz."""
-    
+
     question_id = serializers.IntegerField()
     selected_option_id = serializers.IntegerField(required=False, allow_null=True)
     answer_text = serializers.CharField(required=False, allow_blank=True)
@@ -79,14 +79,14 @@ class SubmitLiveAnswerSerializer(serializers.Serializer):
 
 class JoinSessionSerializer(serializers.Serializer):
     """Serializer for joining a live quiz session."""
-    
+
     join_code = serializers.CharField(max_length=10)
     nickname = serializers.CharField(max_length=50, required=False, allow_blank=True)
 
 
 class LeaderboardEntrySerializer(serializers.Serializer):
     """Serializer for leaderboard entries."""
-    
+
     rank = serializers.IntegerField()
     username = serializers.CharField()
     score = serializers.IntegerField()
@@ -96,9 +96,9 @@ class LeaderboardEntrySerializer(serializers.Serializer):
 
 class LiveQuizQuestionResultSerializer(serializers.ModelSerializer):
     """Serializer for question results."""
-    
+
     question_text = serializers.CharField(source='question.text', read_only=True)
-    
+
     class Meta:
         model = LiveQuizQuestionResult
         fields = (

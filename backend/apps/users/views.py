@@ -20,12 +20,12 @@ class RegisterView(generics.CreateAPIView):
     """User registration endpoint."""
     serializer_class = UserRegistrationSerializer
     permission_classes = [permissions.AllowAny]
-    
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        
+
         return Response({
             'user': UserDetailSerializer(user).data,
             'message': 'User created successfully. Please verify your email.'
@@ -34,7 +34,7 @@ class RegisterView(generics.CreateAPIView):
 
 class UserViewSet(viewsets.ModelViewSet):
     """User management viewset."""
-    
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -43,7 +43,7 @@ class UserViewSet(viewsets.ModelViewSet):
     search_fields = ['email', 'first_name', 'last_name', 'username']
     ordering_fields = ['created_at', 'points']
     ordering = ['-created_at']
-    
+
     def get_permissions(self):
         if self.action == 'destroy':
             return [permissions.IsAuthenticated()]
@@ -65,14 +65,15 @@ class UserViewSet(viewsets.ModelViewSet):
         elif self.action == 'retrieve':
             return UserDetailSerializer
         return UserSerializer
-    
+
     @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
     def me(self, request):
         """Get current user profile."""
         serializer = UserDetailSerializer(request.user)
         return Response(serializer.data)
-    
-    @action(detail=False, methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='change-password')
+
+    @action(detail=False, methods=['post'], permission_classes=[permissions.IsAuthenticated], 
+            url_path='change-password')
     def change_password(self, request):
         """Change user password."""
         serializer = ChangePasswordSerializer(data=request.data)
@@ -87,7 +88,7 @@ class UserViewSet(viewsets.ModelViewSet):
             user.save()
             return Response({'detail': 'Password changed successfully.'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     @action(detail=False, methods=['get'])
     def leaderboard(self, request):
         """Get top users by points."""
@@ -95,31 +96,31 @@ class UserViewSet(viewsets.ModelViewSet):
         users = User.objects.all().order_by('-points')[:limit]
         serializer = LeaderboardSerializer(users, many=True)
         return Response(serializer.data)
-    
+
     @action(detail=False, methods=['post'], url_path='verify-email')
     def verify_email(self, request):
         """Verify email using token."""
         token = request.data.get('token')
         if not token:
             return Response({'detail': 'Token is required.'}, status=status.HTTP_400_BAD_REQUEST)
-            
+
         try:
-            # Assuming you have a way to verify token. 
+            # Assuming you have a way to verify token.
             # For now, let's assume the token IS the user's ID or some simple logic
             # In a real app, you'd look up the token in a table.
             # Let's check if we have an EmailVerificationToken model
             verification_token = EmailVerificationToken.objects.get(token=token)
             user = verification_token.user
-            
+
             if user.is_email_verified:
                 return Response({'detail': 'Email already verified.'}, status=status.HTTP_200_OK)
-                
+
             user.is_email_verified = True
             user.save()
             verification_token.delete() # Consume token
-            
+
             return Response({'detail': 'Email verified successfully.'})
-            
+
         except EmailVerificationToken.DoesNotExist:
             return Response({'detail': 'Invalid or expired token.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -129,9 +130,9 @@ class UserViewSet(viewsets.ModelViewSet):
         email = request.data.get('email')
         if not email:
             return Response({'detail': 'Email is required.'}, status=status.HTTP_400_BAD_REQUEST)
-            
+
         try:
-            user = User.objects.get(email=email)
+            User.objects.get(email=email)
             # In a real app, generate token and send email
             # For now, we'll just return success
             return Response({'detail': 'Password reset email sent.'})
@@ -146,7 +147,7 @@ class UserViewSet(viewsets.ModelViewSet):
         total_users = User.objects.count()
         total_quizzes = Quiz.objects.filter(status='published').count()
         total_attempts = QuizAttempt.objects.count()
-        
+
         return Response({
             'total_users': total_users,
             'total_quizzes': total_quizzes,
@@ -157,14 +158,14 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     """User profile management viewset."""
-    
+
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
-    
+
     @action(detail=False, methods=['get', 'put'])
     def my_profile(self, request):
         """Get or update current user profile."""
@@ -172,11 +173,11 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             profile = request.user.profile
         except UserProfile.DoesNotExist:
             profile = UserProfile.objects.create(user=request.user)
-        
+
         if request.method == 'GET':
             serializer = UserProfileSerializer(profile)
             return Response(serializer.data)
-        
+
         serializer = UserProfileSerializer(profile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()

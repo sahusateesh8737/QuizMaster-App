@@ -3,7 +3,7 @@ URL configuration for quiz project.
 """
 
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import JsonResponse
@@ -30,17 +30,17 @@ urlpatterns = [
     path('api/', api_root, name='api-root-with-prefix'),
     path('admin/', admin.site.urls),
     path('api/auth/', include('rest_framework.urls')),
-    
+
     # JWT Authentication endpoints
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    
+
     # API endpoints
     path('api/users/', include('apps.users.urls')),
     path('api/quizzes/', include('apps.quizzes.urls')),
     path('api/results/', include('apps.results.urls')),
     path('api/live/', include('apps.live_quiz.urls')),
-    
+
     # API Documentation
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
