@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+
 def api_root(request):
     """API root endpoint"""
     return JsonResponse({
@@ -24,6 +25,7 @@ def api_root(request):
             'admin': '/admin/',
         }
     })
+
 
 urlpatterns = [
     path('', api_root, name='api-root'),

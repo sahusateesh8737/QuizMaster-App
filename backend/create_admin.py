@@ -17,6 +17,7 @@ except Exception as e:
 
 from django.contrib.auth import get_user_model  # noqa: E402
 
+
 def create_admin():
     User = get_user_model()
     username = os.environ.get('ADMIN_USERNAME', 'admin')
@@ -38,6 +39,7 @@ def create_admin():
 
     except Exception as e:
         print(f"Error creating admin: {e}")
+
 
 if __name__ == '__main__':
     create_admin()

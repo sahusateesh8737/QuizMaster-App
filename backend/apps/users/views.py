@@ -72,7 +72,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserDetailSerializer(request.user)
         return Response(serializer.data)
 
-    @action(detail=False, methods=['post'], permission_classes=[permissions.IsAuthenticated], 
+    @action(detail=False, methods=['post'], permission_classes=[permissions.IsAuthenticated],
             url_path='change-password')
     def change_password(self, request):
         """Change user password."""
@@ -117,7 +117,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
             user.is_email_verified = True
             user.save()
-            verification_token.delete() # Consume token
+            verification_token.delete()  # Consume token
 
             return Response({'detail': 'Email verified successfully.'})
 

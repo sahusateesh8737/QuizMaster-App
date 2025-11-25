@@ -10,7 +10,7 @@ class LeaderboardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LeaderboardEntry
-        fields = ('id', 'rank', 'user', 'user_name', 'user_avatar', 'score', 'percentage', 'is_passed', 'time_spent', 
+        fields = ('id', 'rank', 'user', 'user_name', 'user_avatar', 'score', 'percentage', 'is_passed', 'time_spent',
                   'attempt_date')
 
 

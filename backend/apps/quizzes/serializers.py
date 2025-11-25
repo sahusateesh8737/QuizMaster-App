@@ -26,7 +26,9 @@ class QuestionOptionSerializer(serializers.ModelSerializer):
             if hasattr(self, 'parent') and self.parent.parent:
                 quiz = self.parent.parent.instance
                 if data.get('pass_percentage') and (data['pass_percentage'] < 0 or data['pass_percentage'] > 100):
-                    raise serializers.ValidationError({"pass_percentage": "Pass percentage must be between 0 and 100."})
+                    raise serializers.ValidationError(
+                        {"pass_percentage": "Pass percentage must be between 0 and 100."}
+                    )
                 if quiz and quiz.creator != request.user and not request.user.is_staff:
                     # Don't include is_correct in response
                     pass
@@ -97,7 +99,8 @@ class UserAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserAnswer
-        fields = ('id', 'question', 'question_text', 'selected_option', 'selected_option_text', 'answer_text', 'is_correct', 'correct_option')
+        fields = ('id', 'question', 'question_text', 'selected_option', 'selected_option_text', 'answer_text',
+                  'is_correct', 'correct_option')
 
     def get_correct_option(self, obj):
         """Get the correct option for the question."""

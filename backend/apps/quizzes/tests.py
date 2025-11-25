@@ -7,6 +7,7 @@ from .models import Quiz, Category, Question, QuestionOption, QuizAttempt
 
 User = get_user_model()
 
+
 @pytest.mark.django_db
 class TestQuizFlow:
     @pytest.fixture

@@ -26,8 +26,10 @@ class Command(BaseCommand):
 
         # Create categories
         categories_data = [
-            {'name': 'Programming', 'slug': 'programming', 'description': 'Test your programming knowledge', 
+            {'name': 'Programming', 'slug': 'programming', 'description': 'Test your programming knowledge',
              'icon': '💻'},
+            {'name': 'General Knowledge', 'slug': 'general-knowledge', 'description': 'Test your general knowledge',
+             'icon': 'Globe'},
             {'name': 'Science', 'slug': 'science', 'description': 'Explore scientific concepts', 'icon': '🔬'},
             {'name': 'History', 'slug': 'history', 'description': 'Journey through time', 'icon': '📚'},
             {'name': 'Mathematics', 'slug': 'mathematics', 'description': 'Solve mathematical problems', 'icon': '🔢'},

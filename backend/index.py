@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.vercel')
 
 # Import and setup Django
-from django.core.wsgi import get_wsgi_application
+from django.core.wsgi import get_wsgi_application  # noqa: E402
 
 # Run migrations on startup (only if DATABASE_URL is set)
 if 'DATABASE_URL' in os.environ:

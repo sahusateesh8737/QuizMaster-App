@@ -16,7 +16,8 @@ class QuestionOptionInline(admin.TabularInline):
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ['text', 'quiz', 'type', 'difficulty', 'order']
+    list_display = ('title', 'creator', 'category', 'difficulty', 'status', 'time_limit', 'total_questions',
+                    'created_at')
     list_filter = ['quiz', 'type', 'difficulty']
     search_fields = ['text', 'quiz__title']
     inlines = [QuestionOptionInline]
@@ -35,7 +36,8 @@ class QuizAdmin(admin.ModelAdmin):
             'fields': ('title', 'description', 'category', 'creator')
         }),
         ('Settings', {
-            'fields': ('status', 'time_limit', 'pass_percentage', 'shuffle_questions', 'shuffle_answers', 'show_correct_answer')
+            'fields': ('status', 'time_limit', 'pass_percentage', 'shuffle_questions', 'shuffle_answers',
+                       'show_correct_answer')
         }),
         ('Display', {
             'fields': ('thumbnail', 'tags')

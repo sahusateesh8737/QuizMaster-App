@@ -26,18 +26,19 @@ def initialize_categories(request):
     try:
         # Create categories
         categories_data = [
-            {'name': 'Programming', 'slug': 'programming', 'description': 'Test your programming knowledge', 'icon': '💻'},
-            {'name': 'Science', 'slug': 'science', 'description': 'Explore scientific concepts', 'icon': '🔬'},
-            {'name': 'History', 'slug': 'history', 'description': 'Journey through time', 'icon': '📚'},
-            {'name': 'Mathematics', 'slug': 'mathematics', 'description': 'Solve mathematical problems', 'icon': '🔢'},
-            {'name': 'General Knowledge', 'slug': 'general-knowledge', 'description': 'Test your general knowledge', 
-             'icon': '🌍'},
-            {'name': 'Literature', 'slug': 'literature', 'description': 'Explore world of books and authors', 
-             'icon': '📖'},
-            {'name': 'Geography', 'slug': 'geography', 'description': 'Know your world', 'icon': '🗺️'},
-            {'name': 'Technology', 'slug': 'technology', 'description': 'Latest in tech world', 'icon': '⚡'},
-            {'name': 'Arts', 'slug': 'arts', 'description': 'Creative and visual arts', 'icon': '🎨'},
-            {'name': 'Sports', 'slug': 'sports', 'description': 'Sports and athletics', 'icon': '⚽'},
+            {'name': 'General Knowledge', 'slug': 'general-knowledge', 'description': 'Test your general knowledge',
+             'icon': 'Globe'},
+            {'name': 'Science', 'slug': 'science', 'description': 'Physics, Chemistry, and Biology', 'icon': 'Beaker'},
+            {'name': 'Technology', 'slug': 'technology', 'description': 'Computers, Programming, and AI',
+             'icon': 'Cpu'},
+            {'name': 'History', 'slug': 'history', 'description': 'World History and Civilizations',
+             'icon': 'BookOpen'},
+            {'name': 'Geography', 'slug': 'geography', 'description': 'Countries, Capitals, and Landscapes',
+             'icon': 'Map'},
+            {'name': 'Arts', 'slug': 'arts', 'description': 'Music, Painting, and Literature', 'icon': 'Palette'},
+            {'name': 'Sports', 'slug': 'sports', 'description': 'Football, Basketball, and more', 'icon': 'Trophy'},
+            {'name': 'Entertainment', 'slug': 'entertainment', 'description': 'Movies, TV Shows, and Celebrities',
+             'icon': 'Film'},
         ]
 
         created_categories = []
@@ -153,7 +154,7 @@ class QuizViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        attempts = quiz.attempts.all()
+        # attempts = quiz.attempts.all()
         questions = quiz.questions.all()
 
         # Calculate analytics

@@ -3,10 +3,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import LiveQuizSession, LiveQuizParticipant, LiveQuizAnswer, LiveQuizQuestionResult
-from apps.quizzes.models import Quiz, Question, QuestionOption
+from django.utils import timezone
+from apps.quizzes.models import Question, QuestionOption
 from .serializers import (
     LiveQuizSessionSerializer, LiveQuizParticipantSerializer,
-    LiveQuizAnswerSerializer, SubmitLiveAnswerSerializer,
+    SubmitLiveAnswerSerializer,
     JoinSessionSerializer, LeaderboardEntrySerializer,
     LiveQuizQuestionResultSerializer
 )
