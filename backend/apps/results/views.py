@@ -4,8 +4,8 @@ from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 
-from .models import LeaderboardEntry, UserBadge, UserStatistics
-from .serializers import (
+from apps.results.models import LeaderboardEntry, UserBadge, UserStatistics
+from apps.results.serializers import (
     LeaderboardSerializer,
     UserBadgeSerializer,
     UserStatisticsSerializer,
