@@ -36,7 +36,11 @@ def test_cors(path, method="OPTIONS"):
     print("-" * 20)
 
 if __name__ == "__main__":
-    print("--- Testing Signin (Token) ---")
+    print("--- Testing Root (/) ---")
+    test_cors("/", "GET")
+    test_cors("/", "OPTIONS")
+
+    print("\n--- Testing Signin (Token) ---")
     test_cors("/api/token/", "OPTIONS")
     test_cors("/api/token/", "POST")
     
