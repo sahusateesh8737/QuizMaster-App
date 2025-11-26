@@ -144,7 +144,7 @@ SIMPLE_JWT = {
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
-    default="http://localhost:3000,http://localhost:3001,http://localhost:5173",
+    default="http://localhost:3000,http://localhost:3001,http://localhost:5173,https://quiz-master-app-roh5.vercel.app",
     cast=Csv(),
 )
 
