@@ -18,13 +18,10 @@ class QuestionOptionInline(admin.TabularInline):
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     list_display = (
-        "title",
-        "creator",
-        "category",
+        "text",
+        "quiz",
+        "type",
         "difficulty",
-        "status",
-        "time_limit",
-        "total_questions",
         "created_at",
     )
     list_filter = ["quiz", "type", "difficulty"]
@@ -36,13 +33,13 @@ class QuestionAdmin(admin.ModelAdmin):
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
     list_display = (
-        "quiz",
-        "user",
-        "score",
-        "completed_at",
-        "passed",
-        "total_questions",
+        "title",
+        "category",
+        "creator",
+        "status",
+        "question_count",
         "average_score",
+        "created_at",
     )
     list_filter = ["status", "category", "created_at", "shuffle_questions"]
     search_fields = ["title", "description", "creator__email"]
