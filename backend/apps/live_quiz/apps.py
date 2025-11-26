@@ -2,6 +2,6 @@ from django.apps import AppConfig
 
 
 class LiveQuizConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.live_quiz'
-    verbose_name = 'Live Quiz'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "apps.live_quiz"
+    verbose_name = "Live Quiz"

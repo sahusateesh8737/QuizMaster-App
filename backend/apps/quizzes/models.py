@@ -1,6 +1,6 @@
-from django.db import models
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 
 User = get_user_model()
 
@@ -12,13 +12,13 @@ class Category(models.Model):
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
     icon = models.CharField(max_length=50, blank=True, help_text="Icon class for frontend")
-    color = models.CharField(max_length=7, default='#3498db', help_text="Hex color code")
+    color = models.CharField(max_length=7, default="#3498db", help_text="Hex color code")
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name_plural = 'Categories'
-        ordering = ['name']
+        verbose_name_plural = "Categories"
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -28,20 +28,20 @@ class Quiz(models.Model):
     """Quiz model."""
 
     STATUS_CHOICES = (
-        ('draft', 'Draft'),
-        ('published', 'Published'),
-        ('archived', 'Archived'),
+        ("draft", "Draft"),
+        ("published", "Published"),
+        ("archived", "Archived"),
     )
 
     title = models.CharField(max_length=255)
     description = models.TextField()
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='quizzes')
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_quizzes')
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="quizzes")
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_quizzes")
 
     # Quiz settings
     time_limit = models.IntegerField(null=True, blank=True, help_text="Time limit in minutes")
     pass_percentage = models.IntegerField(default=60, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft")
 
     # Display settings
     shuffle_questions = models.BooleanField(default=False)
@@ -49,7 +49,7 @@ class Quiz(models.Model):
     show_correct_answer = models.BooleanField(default=True)
 
     # Metadata
-    thumbnail = models.ImageField(upload_to='quiz_thumbnails/', blank=True, null=True)
+    thumbnail = models.ImageField(upload_to="quiz_thumbnails/", blank=True, null=True)
     tags = models.JSONField(default=list, blank=True)
 
     # Statistics
@@ -61,11 +61,11 @@ class Quiz(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
         indexes = [
-            models.Index(fields=['creator']),
-            models.Index(fields=['category']),
-            models.Index(fields=['status']),
+            models.Index(fields=["creator"]),
+            models.Index(fields=["category"]),
+            models.Index(fields=["status"]),
         ]
 
     def __str__(self):
@@ -86,23 +86,23 @@ class Question(models.Model):
     """Question model for questions bank."""
 
     QUESTION_TYPES = (
-        ('mcq', 'Multiple Choice'),
-        ('tf', 'True/False'),
-        ('fill', 'Fill in the Blank'),
-        ('match', 'Matching'),
+        ("mcq", "Multiple Choice"),
+        ("tf", "True/False"),
+        ("fill", "Fill in the Blank"),
+        ("match", "Matching"),
     )
 
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="questions")
     text = models.TextField()
-    type = models.CharField(max_length=20, choices=QUESTION_TYPES, default='mcq')
-    image = models.ImageField(upload_to='question_images/', blank=True, null=True)
+    type = models.CharField(max_length=20, choices=QUESTION_TYPES, default="mcq")
+    image = models.ImageField(upload_to="question_images/", blank=True, null=True)
 
     # For MCQ and T/F
     explanation = models.TextField(blank=True, help_text="Explanation shown after answer")
     difficulty = models.CharField(
         max_length=20,
-        choices=(('easy', 'Easy'), ('medium', 'Medium'), ('hard', 'Hard')),
-        default='medium'
+        choices=(("easy", "Easy"), ("medium", "Medium"), ("hard", "Hard")),
+        default="medium",
     )
 
     # Statistics
@@ -115,10 +115,10 @@ class Question(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['quiz', 'order']
+        ordering = ["quiz", "order"]
         indexes = [
-            models.Index(fields=['quiz']),
-            models.Index(fields=['type']),
+            models.Index(fields=["quiz"]),
+            models.Index(fields=["type"]),
         ]
 
     def __str__(self):
@@ -134,7 +134,7 @@ class Question(models.Model):
 class QuestionOption(models.Model):
     """Options/Answers for MCQ questions."""
 
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='options')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="options")
     text = models.TextField()
     is_correct = models.BooleanField(default=False)
     explanation = models.TextField(blank=True)
@@ -142,7 +142,7 @@ class QuestionOption(models.Model):
     order = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ['question', 'order']
+        ordering = ["question", "order"]
 
     def __str__(self):
         return f"{self.question.text[:50]} - {self.text[:30]}"
@@ -152,15 +152,15 @@ class QuizAttempt(models.Model):
     """Record of a user attempting a quiz."""
 
     STATUS_CHOICES = (
-        ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
-        ('abandoned', 'Abandoned'),
+        ("in_progress", "In Progress"),
+        ("completed", "Completed"),
+        ("abandoned", "Abandoned"),
     )
 
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempts')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='quiz_attempts')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="attempts")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="quiz_attempts")
 
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='in_progress')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="in_progress")
     score = models.FloatField(null=True, blank=True)
     percentage = models.FloatField(null=True, blank=True)
     is_passed = models.BooleanField(null=True, blank=True)
@@ -170,10 +170,10 @@ class QuizAttempt(models.Model):
     time_spent = models.DurationField(null=True, blank=True)
 
     class Meta:
-        ordering = ['-start_time']
+        ordering = ["-start_time"]
         indexes = [
-            models.Index(fields=['user', 'quiz']),
-            models.Index(fields=['status']),
+            models.Index(fields=["user", "quiz"]),
+            models.Index(fields=["status"]),
         ]
 
     def __str__(self):
@@ -183,7 +183,7 @@ class QuizAttempt(models.Model):
 class UserAnswer(models.Model):
     """User's answer to a specific question."""
 
-    attempt = models.ForeignKey(QuizAttempt, on_delete=models.CASCADE, related_name='answers')
+    attempt = models.ForeignKey(QuizAttempt, on_delete=models.CASCADE, related_name="answers")
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
 
     selected_option = models.ForeignKey(QuestionOption, null=True, blank=True, on_delete=models.SET_NULL)
@@ -193,10 +193,10 @@ class UserAnswer(models.Model):
     answered_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['question__order']
+        ordering = ["question__order"]
         indexes = [
-            models.Index(fields=['attempt']),
-            models.Index(fields=['question']),
+            models.Index(fields=["attempt"]),
+            models.Index(fields=["question"]),
         ]
 
     def __str__(self):

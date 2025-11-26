@@ -1,6 +1,8 @@
-from django.db import models
-from django.contrib.auth import get_user_model
 from datetime import timedelta
+
+from django.contrib.auth import get_user_model
+from django.db import models
+
 from apps.quizzes.models import Quiz
 
 User = get_user_model()
@@ -9,7 +11,7 @@ User = get_user_model()
 class LeaderboardEntry(models.Model):
     """Leaderboard entry for top scorers."""
 
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='leaderboard')
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name="leaderboard")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     score = models.FloatField()
     percentage = models.FloatField()
@@ -20,10 +22,10 @@ class LeaderboardEntry(models.Model):
     attempt_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['quiz', 'rank']
-        unique_together = [['quiz', 'rank', 'attempt_date']]
+        ordering = ["quiz", "rank"]
+        unique_together = [["quiz", "rank", "attempt_date"]]
         indexes = [
-            models.Index(fields=['quiz', 'rank']),
+            models.Index(fields=["quiz", "rank"]),
         ]
 
     def __str__(self):
@@ -34,15 +36,15 @@ class UserBadge(models.Model):
     """Achievements and badges for users."""
 
     BADGE_TYPES = (
-        ('quiz_master', 'Quiz Master'),
-        ('speed_demon', 'Speed Demon'),
-        ('perfect_score', 'Perfect Score'),
-        ('knowledge_seeker', 'Knowledge Seeker'),
-        ('consistent_winner', 'Consistent Winner'),
-        ('leaderboard_champion', 'Leaderboard Champion'),
+        ("quiz_master", "Quiz Master"),
+        ("speed_demon", "Speed Demon"),
+        ("perfect_score", "Perfect Score"),
+        ("knowledge_seeker", "Knowledge Seeker"),
+        ("consistent_winner", "Consistent Winner"),
+        ("leaderboard_champion", "Leaderboard Champion"),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='badges_earned')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="badges_earned")
     badge_type = models.CharField(max_length=50, choices=BADGE_TYPES)
     title = models.CharField(max_length=100)
     description = models.TextField()
@@ -51,8 +53,8 @@ class UserBadge(models.Model):
     earned_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-earned_at']
-        unique_together = [['user', 'badge_type']]
+        ordering = ["-earned_at"]
+        unique_together = [["user", "badge_type"]]
 
     def __str__(self):
         return f"{self.user.email} - {self.get_badge_type_display()}"
@@ -61,7 +63,7 @@ class UserBadge(models.Model):
 class UserStatistics(models.Model):
     """Aggregated statistics for each user."""
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='statistics')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="statistics")
 
     total_quizzes_taken = models.IntegerField(default=0)
     total_quizzes_passed = models.IntegerField(default=0)
@@ -82,7 +84,7 @@ class UserStatistics(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name_plural = 'User Statistics'
+        verbose_name_plural = "User Statistics"
 
     def __str__(self):
         return f"Statistics for {self.user.email}"
@@ -90,9 +92,10 @@ class UserStatistics(models.Model):
     def update_statistics(self):
         """Recalculate user statistics from attempts."""
         from django.db.models import Avg, Max, Min, Sum
+
         from apps.quizzes.models import QuizAttempt, UserAnswer
 
-        attempts = QuizAttempt.objects.filter(user=self.user, status='completed')
+        attempts = QuizAttempt.objects.filter(user=self.user, status="completed")
         answers = UserAnswer.objects.filter(attempt__user=self.user)
 
         # Count statistics
@@ -102,15 +105,15 @@ class UserStatistics(models.Model):
 
         # Score statistics
         if self.total_quizzes_taken > 0:
-            self.average_score = attempts.aggregate(Avg('percentage'))['percentage__avg'] or 0
-            self.highest_score = attempts.aggregate(Max('percentage'))['percentage__max'] or 0
-            self.lowest_score = attempts.aggregate(Min('percentage'))['percentage__min'] or 0
+            self.average_score = attempts.aggregate(Avg("percentage"))["percentage__avg"] or 0
+            self.highest_score = attempts.aggregate(Max("percentage"))["percentage__max"] or 0
+            self.lowest_score = attempts.aggregate(Min("percentage"))["percentage__min"] or 0
             self.pass_rate = (self.total_quizzes_passed / self.total_quizzes_taken) * 100
 
         # Time and question statistics
-        time_aggregate = attempts.aggregate(Sum('time_spent'))
-        if time_aggregate['time_spent__sum']:
-            self.total_time_spent = time_aggregate['time_spent__sum']
+        time_aggregate = attempts.aggregate(Sum("time_spent"))
+        if time_aggregate["time_spent__sum"]:
+            self.total_time_spent = time_aggregate["time_spent__sum"]
 
         self.total_questions_attempted = answers.count()
         self.total_questions_correct = answers.filter(is_correct=True).count()

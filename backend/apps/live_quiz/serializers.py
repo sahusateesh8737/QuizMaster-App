@@ -1,29 +1,58 @@
 from rest_framework import serializers
-from .models import LiveQuizSession, LiveQuizParticipant, LiveQuizAnswer, LiveQuizQuestionResult
+
 from apps.quizzes.serializers import QuestionSerializer
+
+from .models import (
+    LiveQuizAnswer,
+    LiveQuizParticipant,
+    LiveQuizQuestionResult,
+    LiveQuizSession,
+)
 
 
 class LiveQuizSessionSerializer(serializers.ModelSerializer):
     """Serializer for live quiz sessions."""
 
-    quiz_title = serializers.CharField(source='quiz.title', read_only=True)
-    host_name = serializers.CharField(source='host.get_full_name', read_only=True)
+    quiz_title = serializers.CharField(source="quiz.title", read_only=True)
+    host_name = serializers.CharField(source="host.get_full_name", read_only=True)
     participant_count = serializers.SerializerMethodField()
     current_question = serializers.SerializerMethodField()
 
     class Meta:
         model = LiveQuizSession
         fields = (
-            'id', 'quiz', 'quiz_title', 'host', 'host_name', 'join_code',
-            'status', 'allow_late_join', 'show_leaderboard', 'randomize_questions',
-            'time_per_question', 'current_question_index', 'current_question_start_time',
-            'created_at', 'started_at', 'ended_at', 'total_participants',
-            'participant_count', 'current_question'
+            "id",
+            "quiz",
+            "quiz_title",
+            "host",
+            "host_name",
+            "join_code",
+            "status",
+            "allow_late_join",
+            "show_leaderboard",
+            "randomize_questions",
+            "time_per_question",
+            "current_question_index",
+            "current_question_start_time",
+            "created_at",
+            "started_at",
+            "ended_at",
+            "total_participants",
+            "participant_count",
+            "current_question",
         )
-        read_only_fields = ('id', 'join_code', 'host', 'created_at', 'started_at', 'ended_at', 'total_participants')
+        read_only_fields = (
+            "id",
+            "join_code",
+            "host",
+            "created_at",
+            "started_at",
+            "ended_at",
+            "total_participants",
+        )
 
     def get_participant_count(self, obj):
-        return obj.participants.filter(status='active').count()
+        return obj.participants.filter(status="active").count()
 
     def get_current_question(self, obj):
         question = obj.get_current_question()
@@ -41,11 +70,20 @@ class LiveQuizParticipantSerializer(serializers.ModelSerializer):
     class Meta:
         model = LiveQuizParticipant
         fields = (
-            'id', 'session', 'user', 'nickname', 'display_name', 'avatar',
-            'status', 'score', 'correct_answers', 'wrong_answers',
-            'last_answer_time', 'joined_at'
+            "id",
+            "session",
+            "user",
+            "nickname",
+            "display_name",
+            "avatar",
+            "status",
+            "score",
+            "correct_answers",
+            "wrong_answers",
+            "last_answer_time",
+            "joined_at",
         )
-        read_only_fields = ('id', 'joined_at', 'last_answer_time')
+        read_only_fields = ("id", "joined_at", "last_answer_time")
 
     def get_display_name(self, obj):
         return obj.user.username if obj.user else obj.nickname
@@ -62,10 +100,17 @@ class LiveQuizAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = LiveQuizAnswer
         fields = (
-            'id', 'participant', 'question', 'selected_option', 'is_correct',
-            'answer_text', 'time_taken', 'answered_at', 'points_awarded'
+            "id",
+            "participant",
+            "question",
+            "selected_option",
+            "is_correct",
+            "answer_text",
+            "time_taken",
+            "answered_at",
+            "points_awarded",
         )
-        read_only_fields = ('id', 'answered_at', 'points_awarded')
+        read_only_fields = ("id", "answered_at", "points_awarded")
 
 
 class SubmitLiveAnswerSerializer(serializers.Serializer):
@@ -97,11 +142,17 @@ class LeaderboardEntrySerializer(serializers.Serializer):
 class LiveQuizQuestionResultSerializer(serializers.ModelSerializer):
     """Serializer for question results."""
 
-    question_text = serializers.CharField(source='question.text', read_only=True)
+    question_text = serializers.CharField(source="question.text", read_only=True)
 
     class Meta:
         model = LiveQuizQuestionResult
         fields = (
-            'id', 'question', 'question_text', 'total_answers', 'correct_count',
-            'wrong_count', 'response_distribution', 'average_time'
+            "id",
+            "question",
+            "question_text",
+            "total_answers",
+            "correct_count",
+            "wrong_count",
+            "response_distribution",
+            "average_time",
         )
