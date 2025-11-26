@@ -28,6 +28,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://127.0.0.1:3000",
     "https://quiz-master-app-roh5.vercel.app",  # Your frontend URL
+    "https://quiz-master-app-swart.vercel.app", # Backend URL itself (sometimes needed)
 ]
 
 # Add Vercel frontend URL when deployed
@@ -40,7 +41,9 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://.*\.vercel\.app$",
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+# Allow all origins for Vercel deployment to avoid CORS issues
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = False # Cookies are not used (JWT in headers)
 CORS_ALLOW_HEADERS = [
     "accept",
     "accept-encoding",
