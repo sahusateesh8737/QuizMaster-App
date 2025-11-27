@@ -10,6 +10,10 @@ from .base import *  # noqa: F403
 DEBUG = False
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())  # noqa: F405
 
+# CORS & CSRF for Railway
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", cast=Csv())
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", cast=Csv())
+
 # PostgreSQL for production
 DATABASES = {"default": dj_database_url.config(default=config("DATABASE_URL"), conn_max_age=600)}  # noqa: F405
 
