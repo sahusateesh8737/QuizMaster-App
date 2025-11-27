@@ -13,6 +13,8 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", default=".railway.app", cast=Csv())  # n
 # CORS & CSRF for Railway
 CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
 CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
+CORS_ALLOW_ALL_ORIGINS = True  # Temporary for debugging
+CORS_ALLOW_CREDENTIALS = True
 
 # PostgreSQL for production
 DATABASES = {
