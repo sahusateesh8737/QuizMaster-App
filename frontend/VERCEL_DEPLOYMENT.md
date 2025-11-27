@@ -4,7 +4,7 @@ This guide will help you deploy the QuizMaster React frontend to Vercel and conn
 
 ## Prerequisites
 
-- Backend deployed at: `https://quiz-master-app-swart.vercel.app`
+- Backend deployed at: `https://quiz-master-app-h5z5.vercel.app`
 - GitHub repository: `sahusateesh8737/QuizMaster-App`
 - Vercel account
 
@@ -31,7 +31,7 @@ This guide will help you deploy the QuizMaster React frontend to Vercel and conn
    - Add:
      ```
      Name: VITE_API_URL
-     Value: https://quiz-master-app-swart.vercel.app/api
+     Value: https://quiz-master-app-h5z5.vercel.app/api
      ```
    - Select: Production, Preview, Development
 
@@ -64,7 +64,7 @@ vercel
 
 # Add environment variable
 vercel env add VITE_API_URL production
-# Enter: https://quiz-master-app-swart.vercel.app/api
+# Enter: https://quiz-master-app-h5z5.vercel.app/api
 
 # Deploy to production
 vercel --prod
@@ -105,7 +105,7 @@ After getting your frontend URL (e.g., `https://quizmaster-frontend.vercel.app`)
 
 | Variable | Value | Description |
 |----------|-------|-------------|
-| `VITE_API_URL` | `https://quiz-master-app-swart.vercel.app/api` | Backend API URL |
+| `VITE_API_URL` | `https://quiz-master-app-h5z5.vercel.app/api` | Backend API URL |
 
 ### Optional
 
@@ -135,8 +135,8 @@ After getting your frontend URL (e.g., `https://quizmaster-frontend.vercel.app`)
 - Console shows: `Failed to fetch`
 
 **Solution**:
-1. Verify `VITE_API_URL` is correct: `https://quiz-master-app-swart.vercel.app/api`
-2. Test backend directly: `https://quiz-master-app-swart.vercel.app/api/categories/`
+1. Verify `VITE_API_URL` is correct: `https://quiz-master-app-h5z5.vercel.app/api`
+2. Test backend directly: `https://quiz-master-app-h5z5.vercel.app/api/categories/`
 3. Ensure environment variable is set in Vercel dashboard
 4. Redeploy frontend
 
@@ -193,7 +193,7 @@ This ensures all routes redirect to index.html for client-side routing.
 
 ### `.env.production`
 ```bash
-VITE_API_URL=https://quiz-master-app-swart.vercel.app/api
+VITE_API_URL=https://quiz-master-app-h5z5.vercel.app/api
 ```
 Local production build testing.
 
@@ -337,17 +337,17 @@ vercel rollback <deployment-url>
 - Vercel Documentation: https://vercel.com/docs
 - Vite Documentation: https://vitejs.dev
 - React Documentation: https://react.dev
-- Your Backend: https://quiz-master-app-swart.vercel.app/api/schema/swagger-ui/
+- Your Backend: https://quiz-master-app-h5z5.vercel.app/api/schema/swagger-ui/
 
 ## Complete URLs
 
 After deployment, you'll have:
 
 - **Frontend**: `https://your-frontend.vercel.app`
-- **Backend**: `https://quiz-master-app-swart.vercel.app`
-- **Backend API**: `https://quiz-master-app-swart.vercel.app/api/`
-- **Admin Panel**: `https://quiz-master-app-swart.vercel.app/admin/`
-- **API Docs**: `https://quiz-master-app-swart.vercel.app/api/schema/swagger-ui/`
+- **Backend**: `https://quiz-master-app-h5z5.vercel.app`
+- **Backend API**: `https://quiz-master-app-h5z5.vercel.app/api/`
+- **Admin Panel**: `https://quiz-master-app-h5z5.vercel.app/admin/`
+- **API Docs**: `https://quiz-master-app-h5z5.vercel.app/api/schema/swagger-ui/`
 
 ## Next Steps
 

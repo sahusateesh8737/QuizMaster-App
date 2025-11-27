@@ -5,7 +5,7 @@ Quick script to test what's wrong with Vercel deployment
 import requests
 import json
 
-BACKEND_URL = "https://quiz-master-app-swart.vercel.app"
+BACKEND_URL = "https://quiz-master-app-h5z5.vercel.app"
 
 print("🔍 Testing Vercel Backend...\n")
 

@@ -26,7 +26,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://127.0.0.1:3001",
     "https://quiz-master-app-roh5.vercel.app",
-    "https://quiz-master-app-swart.vercel.app",
+    "https://quiz-master-app-h5z5.vercel.app",
 ]
 
 # Development caching

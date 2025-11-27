@@ -1,6 +1,6 @@
 import requests
 
-BACKEND_URL = "https://quiz-master-app-swart.vercel.app"
+BACKEND_URL = "https://quiz-master-app-h5z5.vercel.app"
 FRONTEND_ORIGIN = "https://quiz-master-app-roh5.vercel.app"
 
 def test_cors(path, method="OPTIONS"):

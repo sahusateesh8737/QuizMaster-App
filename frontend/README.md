@@ -184,7 +184,7 @@ npm run build
 ### Environment Variables
 Create `.env.production`:
 ```
-VITE_API_URL=https://quiz-master-app-swart.vercel.app/api
+VITE_API_URL=https://quiz-master-app-h5z5.vercel.app/api
 ```
 
 ### Hosting Options
