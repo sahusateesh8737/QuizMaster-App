@@ -7,8 +7,7 @@ import os
 from .base import *  # noqa: F403
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # Enabled for debugging 500 error
+DEBUG = False  # Set to False for production security
 
 # Vercel provides the VERCEL_URL environment variable
 ALLOWED_HOSTS = [
