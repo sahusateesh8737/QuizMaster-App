@@ -8,19 +8,25 @@ from .base import *  # noqa: F403
 
 # Production settings override
 DEBUG = False
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())  # noqa: F405
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default=".railway.app", cast=Csv())  # noqa: F405
 
 # CORS & CSRF for Railway
-CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", cast=Csv())
-CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", cast=Csv())
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv())
 
 # PostgreSQL for production
-DATABASES = {"default": dj_database_url.config(default=config("DATABASE_URL"), conn_max_age=600)}  # noqa: F405
+DATABASES = {
+    "default": dj_database_url.config(
+        default="sqlite:///" + str(BASE_DIR / "db.sqlite3"),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
 
 # Security settings
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)
+SESSION_COOKIE_SECURE = config("SESSION_COOKIE_SECURE", default=True, cast=bool)
+CSRF_COOKIE_SECURE = config("CSRF_COOKIE_SECURE", default=True, cast=bool)
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_SECURITY_POLICY = {
     "default-src": ("'self'",),
@@ -36,7 +42,7 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"  # noqa: F405
 
 # AWS S3 for production
-USE_S3 = True
+USE_S3 = config("USE_S3", default=True, cast=bool)
 AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID", default=None)  # noqa: F405
 AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY", default=None)  # noqa: F405
 AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME", default=None)  # noqa: F405
@@ -53,5 +59,5 @@ if all([AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME]):
     MEDIA_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 # Celery for production
-CELERY_BROKER_URL = config("CELERY_BROKER_URL")  # noqa: F405
-CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND")  # noqa: F405
+CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="redis://localhost:6379/0")  # noqa: F405
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND", default="redis://localhost:6379/0")  # noqa: F405
