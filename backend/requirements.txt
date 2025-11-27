@@ -16,6 +16,7 @@ python-dotenv==1.0.0
 
 # Caching & Message Broker
 redis==5.0.1
+django-redis==5.4.0
 celery==5.3.4
 django-celery-beat==2.5.0
 

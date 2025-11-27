@@ -6,7 +6,7 @@ This guide explains how to deploy the QuizMaster backend to Railway.
 
 - Railway account: [railway.app](https://railway.app)
 - GitHub repository connected to Railway
-- Railway CLI (optional)
+- Railway CLI installed (`npm i -g @railway/cli`)
 
 ## Step-by-Step Deployment
 
@@ -15,7 +15,9 @@ This guide explains how to deploy the QuizMaster backend to Railway.
 1. Go to your Railway Dashboard.
 2. Click "New Project" -> "Deploy from GitHub repo".
 3. Select your repository (`QuizMaster-App`).
-4. Select the `backend` directory as the root directory if asked (or configure it in settings later).
+4. **Important**: Configure the Root Directory.
+   - Go to Settings -> General -> Root Directory.
+   - Set it to `/backend`.
 
 ### 2. Configure Environment Variables
 
@@ -36,7 +38,12 @@ Go to the "Variables" tab in your Railway project and add the following:
 ### 3. Database Setup
 
 1. In your Railway project view, right-click (or click "New") -> "Database" -> "PostgreSQL".
-2. Railway will automatically inject `DATABASE_URL` into your service variables.
+2. Go to your **QuizMaster-App** service -> **Variables**.
+3. Add a new variable:
+   - **Name**: `DATABASE_URL`
+   - **Value**: `${{ Postgres.DATABASE_URL }}`
+   
+   *Note: This special syntax tells Railway to automatically pull the connection string from your Postgres service.*
 
 ### 4. Build & Deploy
 
@@ -45,35 +52,54 @@ Railway detects the `Procfile` and `requirements.txt`.
 - **Build Command**: `pip install -r requirements.txt` (Automatic)
 - **Start Command**: `gunicorn config.wsgi:application --log-file -` (From Procfile)
 
-### 5. Run Migrations
+### 5. Run Migrations (Critical Step)
 
-Once deployed, you need to run migrations.
+You must run migrations to create the database tables.
 
-**Option A: Railway CLI**
-```bash
-railway run python manage.py migrate
-```
+**Option A: Using Railway CLI (Recommended)**
 
-**Option B: Custom Start Command (Not Recommended for every deploy)**
-Change start command to:
-```bash
-python manage.py migrate && gunicorn config.wsgi:application --log-file -
-```
+1. Open your terminal in the project root.
+2. Link your project if you haven't already:
+   ```bash
+   railway link
+   ```
+3. Run the migration command **(Note: `manage.py` is in the backend folder, but `railway run` executes in the deployed environment context)**:
+   ```bash
+   railway run python manage.py migrate
+   ```
 
-**Option C: Railway Shell**
-Use the Railway dashboard to open a shell in your service and run:
-```bash
-python manage.py migrate
-```
+**Option B: Using Railway Web Shell**
+
+1. Go to your Railway Dashboard.
+2. Click on your `QuizMaster-App` service.
+3. Click on the "Shell" tab (or "Command" tab).
+4. Type and run:
+   ```bash
+   python manage.py migrate
+   ```
 
 ### 6. Create Superuser
 
-Use the Railway Shell:
+To access the admin panel, create a superuser:
+
 ```bash
+# Using CLI
+railway run python manage.py createsuperuser
+
+# OR Using Web Shell
 python manage.py createsuperuser
 ```
 
 ## Troubleshooting
 
-- **Static Files**: If styles are missing, ensure you have configured AWS S3 variables, as Railway filesystem is ephemeral (like Vercel).
-- **Database Connection**: Ensure the PostgreSQL plugin is connected to your service.
+### "python: can't open file 'manage.py': [Errno 2] No such file or directory"
+- This happens if you try to run `python manage.py` locally from the wrong directory.
+- **Fix**: `cd backend` before running local commands.
+- **Fix for Railway**: If running `railway run`, ensure your service root directory is correctly set to `/backend` in Railway settings, OR if running locally against production DB, make sure you are in the `backend` folder.
+
+### "ALLOWED_HOSTS" Error
+- Ensure `ALLOWED_HOSTS` variable includes `.railway.app`.
+
+### Static Files Missing
+- Railway's filesystem is ephemeral. Use AWS S3 or Whitenoise for static files.
+- If using Whitenoise, ensure `STATIC_ROOT` is set and `collectstatic` runs during build.
