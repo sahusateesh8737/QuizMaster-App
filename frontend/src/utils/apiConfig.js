@@ -1,6 +1,10 @@
 // API configuration utility
 const getApiUrl = () => {
-  return import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+  let url = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
+  if (url.includes('railway.app') && url.startsWith('http://')) {
+    url = url.replace('http://', 'https://')
+  }
+  return url
 }
 
 const getApiBase = () => {
