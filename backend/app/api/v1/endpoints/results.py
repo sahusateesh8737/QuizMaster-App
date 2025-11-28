@@ -11,6 +11,24 @@ from app.schemas.result import LeaderboardEntry as LeaderboardEntrySchema, UserS
 
 router = APIRouter()
 
+@router.get("/leaderboard", response_model=List[LeaderboardEntrySchema])
+async def read_global_leaderboard(
+    db: AsyncSession = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+) -> Any:
+    """
+    Retrieve global leaderboard.
+    """
+    result = await db.execute(
+        select(LeaderboardEntry)
+        .order_by(LeaderboardEntry.score.desc())
+        .offset(skip)
+        .limit(limit)
+    )
+    entries = result.scalars().all()
+    return entries
+
 @router.get("/leaderboard/{quiz_id}", response_model=List[LeaderboardEntrySchema])
 async def read_leaderboard(
     quiz_id: int,
