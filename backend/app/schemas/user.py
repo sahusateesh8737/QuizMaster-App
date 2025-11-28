@@ -46,7 +46,15 @@ class UserInDB(UserInDBBase):
 # Token schemas
 class Token(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: str
 
 class TokenPayload(BaseModel):
     sub: Optional[int] = None
+
+class TokenRefresh(BaseModel):
+    refresh: str
+
+class Login(BaseModel):
+    username: str
+    password: str

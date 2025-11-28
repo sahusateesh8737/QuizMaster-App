@@ -4,7 +4,7 @@ const authService = {
   // User Registration
   signup: async (userData) => {
     try {
-      const response = await apiClient.post('/users/register/', userData)
+      const response = await apiClient.post('/auth/register', userData)
       return response.data
     } catch (error) {
       throw error.response?.data || error.message
@@ -14,13 +14,13 @@ const authService = {
   // User Login
   login: async (username, password) => {
     try {
-      const response = await apiClient.post('/token/', {
+      const response = await apiClient.post('/auth/login/access-token', {
         username,
         password,
       })
-      if (response.data.access) {
-        localStorage.setItem('access_token', response.data.access)
-        localStorage.setItem('refresh_token', response.data.refresh)
+      if (response.data.access_token) {
+        localStorage.setItem('access_token', response.data.access_token)
+        localStorage.setItem('refresh_token', response.data.refresh_token)
       }
       return response.data
     } catch (error) {
@@ -37,7 +37,7 @@ const authService = {
   // Get Current User
   getCurrentUser: async () => {
     try {
-      const response = await apiClient.get('/users/me/')
+      const response = await apiClient.get('/users/me')
       return response.data
     } catch (error) {
       throw error.response?.data || error.message
