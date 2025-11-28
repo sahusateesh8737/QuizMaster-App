@@ -116,10 +116,10 @@ export default function LoginPage() {
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <Input
-            label="Username"
+            label="Email"
             type="text"
             name="username"
-            placeholder="Enter your username"
+            placeholder="Enter your Email"
             value={formData.username}
             onChange={handleChange}
             error={errors.username}
