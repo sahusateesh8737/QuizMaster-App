@@ -18,11 +18,31 @@ class Settings(BaseSettings):
 
     @validator("BACKEND_CORS_ORIGINS", pre=True)
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
-        if isinstance(v, str) and not v.startswith("["):
-            return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
+        print(f"DEBUG: assemble_cors_origins input: {v} (type: {type(v)})")
+        
+        if isinstance(v, str):
+            if not v.startswith("["):
+                return [i.strip() for i in v.split(",")]
+            else:
+                # Try parsing JSON string
+                import json
+                try:
+                    parsed = json.loads(v)
+                    print(f"DEBUG: Parsed JSON: {parsed}")
+                    return parsed
+                except json.JSONDecodeError:
+                    # Fallback if it looks like a list but isn't valid JSON (e.g. single quotes)
+                    # This is risky but might handle '["url"]'
+                    return v
+                    
+        if isinstance(v, list):
+            # Handle nested list case (suspected Railway issue)
+            if len(v) > 0 and isinstance(v[0], list):
+                print("DEBUG: Flattening nested list")
+                return [item for sublist in v for item in sublist]
             return v
-        raise ValueError(v)
+            
+        return v
 
     # Database
     DATABASE_URL: str
