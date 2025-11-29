@@ -1,8 +1,10 @@
 import axios from 'axios';
 
 let API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1';
-if (API_BASE_URL.includes('railway.app') && API_BASE_URL.startsWith('http://')) {
-  API_BASE_URL = API_BASE_URL.replace('http://', 'https://');
+
+// Force HTTPS in production
+if (!window.location.hostname.includes('localhost')) {
+  API_BASE_URL = 'https://devops-production-b01b.up.railway.app/api/v1';
 }
 
 const api = axios.create({

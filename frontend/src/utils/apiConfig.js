@@ -1,10 +1,13 @@
 // API configuration utility
 const getApiUrl = () => {
-  let url = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
-  if (url.includes('railway.app') && url.startsWith('http://')) {
-    url = url.replace('http://', 'https://')
+  const envUrl = import.meta.env.VITE_API_URL
+
+  // If we are in production (not localhost), force the known correct HTTPS URL
+  if (!window.location.hostname.includes('localhost')) {
+    return 'https://devops-production-b01b.up.railway.app/api/v1'
   }
-  return url
+
+  return envUrl || 'http://localhost:8000/api'
 }
 
 const getApiBase = () => {
