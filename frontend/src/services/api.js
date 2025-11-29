@@ -10,7 +10,7 @@ const api = axios.create({
 
 // Combined interceptor to set baseURL dynamically and add token
 api.interceptors.request.use((config) => {
-  // Set the baseURL at request time, not module load time
+  // Set the baseURL at request time to ensure environment variables are loaded
   config.baseURL = getApiUrl();
   
   // Add token to requests

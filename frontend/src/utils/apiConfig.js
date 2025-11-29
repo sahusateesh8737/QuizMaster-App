@@ -1,15 +1,14 @@
-// API configuration utility - Updated for Railway HTTPS
+// API configuration utility
 const getApiUrl = () => {
-  // Production: Always use HTTPS for Railway backend
-  if (window.location.protocol === 'https:' || !window.location.hostname.includes('localhost')) {
-    console.log('[API Config] Using HTTPS Railway backend');
-    return 'https://devops-production-b01b.up.railway.app/api/v1';
+  // Get URL from environment variable
+  let apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+  
+  // Force HTTPS if the API URL uses railway.app domain but has http://
+  if (apiUrl.includes('railway.app') && apiUrl.startsWith('http://')) {
+    apiUrl = apiUrl.replace('http://', 'https://');
   }
-
-  // Local development
-  const localUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
-  console.log('[API Config] Using local backend:', localUrl);
-  return localUrl;
+  
+  return apiUrl;
 }
 
 const getApiBase = () => {
