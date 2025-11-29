@@ -1,21 +1,19 @@
 import axios from 'axios';
+import getApiUrl from '../utils/apiConfig';
 
-let API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001/api/v1';
-
-// Force HTTPS in production
-if (!window.location.hostname.includes('localhost')) {
-  API_BASE_URL = 'https://devops-production-b01b.up.railway.app/api/v1';
-}
-
+// Use the centralized API URL configuration
 const api = axios.create({
-  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Interceptor to add token to requests
+// Combined interceptor to set baseURL dynamically and add token
 api.interceptors.request.use((config) => {
+  // Set the baseURL at request time, not module load time
+  config.baseURL = getApiUrl();
+  
+  // Add token to requests
   const token = localStorage.getItem('access_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -33,7 +31,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const refreshToken = localStorage.getItem('refresh_token');
-        const response = await axios.post(`${API_BASE_URL}/auth/refresh-token`, {
+        const response = await axios.post(`${getApiUrl()}/auth/refresh-token`, {
           refresh: refreshToken,
         });
         const { access_token } = response.data;
