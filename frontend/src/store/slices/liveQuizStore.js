@@ -1,7 +1,8 @@
 import { create } from 'zustand'
 import getApiUrl from '../../utils/apiConfig'
 
-const API_BASE = `${getApiUrl()}/live`
+// Helper function to get API base URL at runtime
+const getApiBase = () => `${getApiUrl()}/live`
 
 export const useLiveQuizStore = create((set, get) => ({
   // State
@@ -20,7 +21,7 @@ export const useLiveQuizStore = create((set, get) => ({
     set({ loading: true, error: null })
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch(`${API_BASE}/sessions/`, {
+      const response = await fetch(`${getApiBase()}/sessions/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +48,7 @@ export const useLiveQuizStore = create((set, get) => ({
     set({ loading: true, error: null })
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch(`${API_BASE}/sessions/${sessionId}/start/`, {
+      const response = await fetch(`${getApiBase()}/sessions/${sessionId}/start/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -69,7 +70,7 @@ export const useLiveQuizStore = create((set, get) => ({
     set({ loading: true, error: null })
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch(`${API_BASE}/sessions/${sessionId}/next_question/`, {
+      const response = await fetch(`${getApiBase()}/sessions/${sessionId}/next_question/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -101,7 +102,7 @@ export const useLiveQuizStore = create((set, get) => ({
     set({ loading: true, error: null })
     try {
       const token = localStorage.getItem('access_token')
-      const response = await fetch(`${API_BASE}/sessions/${sessionId}/end/`, {
+      const response = await fetch(`${getApiBase()}/sessions/${sessionId}/end/`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -121,7 +122,7 @@ export const useLiveQuizStore = create((set, get) => ({
 
   fetchParticipants: async (sessionId) => {
     try {
-      const response = await fetch(`${API_BASE}/sessions/${sessionId}/participants/`)
+      const response = await fetch(`${getApiBase()}/sessions/${sessionId}/participants/`)
       if (!response.ok) throw new Error('Failed to fetch participants')
 
       const participants = await response.json()
@@ -135,7 +136,7 @@ export const useLiveQuizStore = create((set, get) => ({
 
   fetchLeaderboard: async (sessionId) => {
     try {
-      const response = await fetch(`${API_BASE}/sessions/${sessionId}/leaderboard/`)
+      const response = await fetch(`${getApiBase()}/sessions/${sessionId}/leaderboard/`)
       if (!response.ok) throw new Error('Failed to fetch leaderboard')
 
       const leaderboard = await response.json()
@@ -153,7 +154,7 @@ export const useLiveQuizStore = create((set, get) => ({
       const token = localStorage.getItem('access_token')
       const headers = token ? { 'Authorization': `Bearer ${token}` } : {}
       
-      const response = await fetch(`${API_BASE}/sessions/${sessionId}/`, {
+      const response = await fetch(`${getApiBase()}/sessions/${sessionId}/`, {
         headers,
       })
 
@@ -172,7 +173,7 @@ export const useLiveQuizStore = create((set, get) => ({
   verifyJoinCode: async (code) => {
     set({ loading: true, error: null })
     try {
-      const response = await fetch(`${API_BASE}/sessions/verify_code/?code=${code}`)
+      const response = await fetch(`${getApiBase()}/sessions/verify_code/?code=${code}`)
       
       if (!response.ok) {
         set({ loading: false })
@@ -200,7 +201,7 @@ export const useLiveQuizStore = create((set, get) => ({
         headers['Authorization'] = `Bearer ${token}`
       }
 
-      const response = await fetch(`${API_BASE}/sessions/join/`, {
+      const response = await fetch(`${getApiBase()}/sessions/join/`, {
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -231,7 +232,7 @@ export const useLiveQuizStore = create((set, get) => ({
   submitAnswer: async (participantId, questionId, selectedOptionId, timeTaken) => {
     set({ loading: true, error: null })
     try {
-      const response = await fetch(`${API_BASE}/participants/${participantId}/submit_answer/`, {
+      const response = await fetch(`${getApiBase()}/participants/${participantId}/submit_answer/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -271,7 +272,7 @@ export const useLiveQuizStore = create((set, get) => ({
 
   leaveSession: async (participantId) => {
     try {
-      await fetch(`${API_BASE}/participants/${participantId}/leave/`, {
+      await fetch(`${getApiBase()}/participants/${participantId}/leave/`, {
         method: 'POST',
       })
       set({ currentSession: null, currentParticipant: null })
