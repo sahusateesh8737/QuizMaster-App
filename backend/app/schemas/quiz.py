@@ -1,6 +1,6 @@
 from typing import Optional, List, Dict, Any
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 
 # Question Option
 class QuestionOptionBase(BaseModel):
@@ -86,5 +86,12 @@ class Quiz(QuizBase):
     updated_at: Optional[datetime] = None
     questions: List[Question] = []
 
+    @computed_field
+    @property
+    def questions_count(self) -> int:
+        """Return the number of questions in this quiz."""
+        return len(self.questions)
+
     class Config:
         from_attributes = True
+
