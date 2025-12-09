@@ -301,7 +301,7 @@ async def complete_quiz_attempt(
     )
     total_questions = result.scalar()
     
-    # Calculate score
+    # Calculate score from answers (do this before any commits to avoid session issues)
     correct_answers = sum(1 for answer in attempt.answers if answer.is_correct)
     score = correct_answers
     percentage = (correct_answers / total_questions * 100) if total_questions > 0 else 0
@@ -320,7 +320,7 @@ async def complete_quiz_attempt(
     if is_passed:
         quiz.total_passes += 1
     
-    # Update average score
+    # Update average score (calculate after this attempt is marked completed)
     result = await db.execute(
         select(func.avg(QuizAttempt.percentage))
         .where(QuizAttempt.quiz_id == quiz.id)
@@ -329,24 +329,33 @@ async def complete_quiz_attempt(
     avg_score = result.scalar()
     quiz.average_score = float(avg_score) if avg_score else 0.0
     
-    await db.commit()
-    await db.refresh(attempt)
-    
-    # Convert timedelta to seconds for JSON serialization
+    # Store values we'll need for the response before committing
+    attempt_id = attempt.id
+    attempt_quiz_id = attempt.quiz_id
+    attempt_user_id = attempt.user_id
+    attempt_status = attempt.status
+    attempt_score = attempt.score
+    attempt_percentage = attempt.percentage
+    attempt_is_passed = attempt.is_passed
+    attempt_start_time = attempt.start_time
+    attempt_end_time = attempt.end_time
     time_spent_seconds = int(attempt.time_spent.total_seconds()) if attempt.time_spent else None
     
+    # Commit all changes
+    await db.commit()
+    
     return QuizAttemptComplete(
-        id=attempt.id,
-        quiz_id=attempt.quiz_id,
-        user_id=attempt.user_id,
-        status=attempt.status,
-        score=attempt.score,
-        percentage=attempt.percentage,
-        is_passed=attempt.is_passed,
+        id=attempt_id,
+        quiz_id=attempt_quiz_id,
+        user_id=attempt_user_id,
+        status=attempt_status,
+        score=attempt_score,
+        percentage=attempt_percentage,
+        is_passed=attempt_is_passed,
         total_questions=total_questions,
         correct_answers=correct_answers,
-        start_time=attempt.start_time,
-        end_time=attempt.end_time,
+        start_time=attempt_start_time,
+        end_time=attempt_end_time,
         time_spent=time_spent_seconds,
     )
 
