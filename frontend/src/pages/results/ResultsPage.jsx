@@ -50,11 +50,11 @@ export default function ResultsPage() {
           id: attemptData.id,
           quiz_title: attemptData.quiz_title,
           score: Math.round(attemptData.percentage || 0),
-          total_questions: attemptData.total_questions || attemptData.answers?.length || 0,
-          correct_answers: attemptData.score || 0,
+          total_questions: attemptData.total_questions || 0,
+          correct_answers: Math.round(attemptData.score || 0),
           time_taken: timeTaken,
           pass: attemptData.is_passed,
-          pass_percentage: 70, // Default, should come from quiz
+          pass_percentage: attemptData.pass_percentage || 70,
           category: 'Quiz',
           date: new Date(attemptData.end_time || attemptData.start_time).toLocaleDateString(),
           answers: attemptData.answers?.map(ans => ({
@@ -62,7 +62,7 @@ export default function ResultsPage() {
             question: ans.question_text,
             correct: ans.is_correct,
             selected: ans.selected_option_text,
-            correctAnswer: ans.correct_option?.text,
+            correctAnswer: ans.correct_option_text,
           })) || [],
         })
       } catch (error) {
