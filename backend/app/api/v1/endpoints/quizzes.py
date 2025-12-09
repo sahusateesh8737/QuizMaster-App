@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 from sqlalchemy import func
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.api import deps
 from app.models.quiz import Quiz, Category, Question, QuestionOption, QuizAttempt, UserAnswer
@@ -244,7 +244,7 @@ async def submit_answer(
         existing_answer.selected_option_id = answer_in.selected_option_id
         existing_answer.answer_text = answer_in.answer_text
         existing_answer.is_correct = is_correct
-        existing_answer.answered_at = datetime.utcnow()
+        existing_answer.answered_at = datetime.now(timezone.utc)
         await db.commit()
         await db.refresh(existing_answer)
         return existing_answer
@@ -312,7 +312,7 @@ async def complete_quiz_attempt(
     attempt.score = float(score)
     attempt.percentage = float(percentage)
     attempt.is_passed = is_passed
-    attempt.end_time = datetime.utcnow()
+    attempt.end_time = datetime.now(timezone.utc)  # Use timezone-aware datetime
     attempt.time_spent = attempt.end_time - attempt.start_time
     
     # Update quiz statistics
