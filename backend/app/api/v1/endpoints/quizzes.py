@@ -68,24 +68,7 @@ async def create_quiz(
     await db.refresh(quiz)
     return quiz
 
-@router.get("/{quiz_id}", response_model=QuizSchema)
-async def read_quiz(
-    quiz_id: int,
-    db: AsyncSession = Depends(deps.get_db),
-) -> Any:
-    """
-    Get quiz by ID.
-    """
-    result = await db.execute(
-        select(Quiz)
-        .where(Quiz.id == quiz_id)
-        .options(selectinload(Quiz.questions).selectinload(Question.options))
-    )
-    quiz = result.scalars().first()
-    if not quiz:
-        raise HTTPException(status_code=404, detail="Quiz not found")
-    return quiz
-
+# Category routes must come before /{quiz_id} to avoid matching "categories" as an ID
 @router.get("/categories", response_model=List[CategorySchema])
 async def read_categories(
     db: AsyncSession = Depends(deps.get_db),
@@ -120,6 +103,24 @@ async def create_category(
     await db.commit()
     await db.refresh(category)
     return category
+
+@router.get("/{quiz_id}", response_model=QuizSchema)
+async def read_quiz(
+    quiz_id: int,
+    db: AsyncSession = Depends(deps.get_db),
+) -> Any:
+    """
+    Get quiz by ID.
+    """
+    result = await db.execute(
+        select(Quiz)
+        .where(Quiz.id == quiz_id)
+        .options(selectinload(Quiz.questions).selectinload(Question.options))
+    )
+    quiz = result.scalars().first()
+    if not quiz:
+        raise HTTPException(status_code=404, detail="Quiz not found")
+    return quiz
 
 # Quiz Attempt Endpoints
 
