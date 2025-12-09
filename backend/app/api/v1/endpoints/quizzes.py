@@ -166,12 +166,16 @@ async def get_quiz_attempt(
     current_user: User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
-    Get quiz attempt details.
+    Get quiz attempt details with enriched data for results display.
     """
+    # Load attempt with all related data
     result = await db.execute(
         select(QuizAttempt)
         .where(QuizAttempt.id == attempt_id)
-        .options(selectinload(QuizAttempt.answers))
+        .options(
+            selectinload(QuizAttempt.answers),
+            selectinload(QuizAttempt.quiz).selectinload(Quiz.questions).selectinload(Question.options)
+        )
     )
     attempt = result.scalars().first()
     
@@ -182,7 +186,51 @@ async def get_quiz_attempt(
     if attempt.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized to view this attempt")
     
-    return attempt
+    # Enrich the response with quiz and question data
+    quiz = attempt.quiz
+    
+    # Create enriched answer data
+    enriched_answers = []
+    for answer in attempt.answers:
+        # Find the question
+        question = next((q for q in quiz.questions if q.id == answer.question_id), None)
+        if not question:
+            continue
+            
+        # Find selected and correct options
+        selected_option = next((opt for opt in question.options if opt.id == answer.selected_option_id), None)
+        correct_option = next((opt for opt in question.options if opt.is_correct), None)
+        
+        enriched_answers.append({
+            "id": answer.id,
+            "attempt_id": answer.attempt_id,
+            "question_id": answer.question_id,
+            "selected_option_id": answer.selected_option_id,
+            "answer_text": answer.answer_text,
+            "is_correct": answer.is_correct,
+            "answered_at": answer.answered_at,
+            "question_text": question.question_text,
+            "selected_option_text": selected_option.option_text if selected_option else None,
+            "correct_option_text": correct_option.option_text if correct_option else None,
+        })
+    
+    # Build enriched response
+    return {
+        "id": attempt.id,
+        "quiz_id": attempt.quiz_id,
+        "user_id": attempt.user_id,
+        "status": attempt.status,
+        "score": attempt.score,
+        "percentage": attempt.percentage,
+        "is_passed": attempt.is_passed,
+        "start_time": attempt.start_time,
+        "end_time": attempt.end_time,
+        "time_spent": attempt.time_spent,
+        "answers": enriched_answers,
+        "quiz_title": quiz.title,
+        "total_questions": len(quiz.questions),
+        "pass_percentage": quiz.pass_percentage,
+    }
 
 @router.post("/attempts/{attempt_id}/submit_answer/", response_model=UserAnswerSchema)
 async def submit_answer(

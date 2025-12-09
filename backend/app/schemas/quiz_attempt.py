@@ -16,6 +16,10 @@ class UserAnswer(UserAnswerBase):
     attempt_id: int
     is_correct: Optional[bool] = None
     answered_at: datetime
+    # Enriched fields for frontend display
+    question_text: Optional[str] = None
+    selected_option_text: Optional[str] = None
+    correct_option_text: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -38,6 +42,10 @@ class QuizAttempt(QuizAttemptBase):
     end_time: Optional[datetime] = None
     time_spent: Optional[int] = None  # Will store seconds
     answers: List[UserAnswer] = []
+    # Enriched fields for frontend display
+    quiz_title: Optional[str] = None
+    total_questions: Optional[int] = None
+    pass_percentage: Optional[float] = None
 
     @field_validator('time_spent', mode='before')
     @classmethod
