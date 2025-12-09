@@ -151,7 +151,9 @@ async def create_quiz_attempt(
     )
     db.add(attempt)
     await db.commit()
-    await db.refresh(attempt)
+    
+    # Refresh and eagerly load the answers relationship to avoid lazy loading issues
+    await db.refresh(attempt, attribute_names=['answers'])
     
     return attempt
 
