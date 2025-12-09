@@ -188,6 +188,8 @@ async def get_quiz_attempt(
     
     # Enrich the response with quiz and question data
     quiz = attempt.quiz
+    if not quiz:
+        raise HTTPException(status_code=500, detail="Quiz data not found for this attempt")
     
     # Create enriched answer data
     enriched_answers = []
@@ -195,6 +197,19 @@ async def get_quiz_attempt(
         # Find the question
         question = next((q for q in quiz.questions if q.id == answer.question_id), None)
         if not question:
+            # If question not found, add basic answer data without enrichment
+            enriched_answers.append({
+                "id": answer.id,
+                "attempt_id": answer.attempt_id,
+                "question_id": answer.question_id,
+                "selected_option_id": answer.selected_option_id,
+                "answer_text": answer.answer_text,
+                "is_correct": answer.is_correct,
+                "answered_at": answer.answered_at,
+                "question_text": None,
+                "selected_option_text": None,
+                "correct_option_text": None,
+            })
             continue
             
         # Find selected and correct options
