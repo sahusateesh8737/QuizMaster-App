@@ -40,13 +40,16 @@ class QuizAttempt(QuizAttemptBase):
     answers: List[UserAnswer] = []
 
     @field_serializer('time_spent')
-    def serialize_time_spent(self, value: Optional[timedelta], _info) -> Optional[int]:
+    def serialize_time_spent(self, value, _info) -> Optional[int]:
         """Convert timedelta to seconds for JSON serialization"""
         if value is None:
             return None
         if isinstance(value, timedelta):
             return int(value.total_seconds())
-        return value  # Already an int
+        if isinstance(value, int):
+            return value
+        # Handle any other type gracefully
+        return None
 
     class Config:
         from_attributes = True
