@@ -21,29 +21,36 @@ class Settings(BaseSettings):
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
         print(f"DEBUG: assemble_cors_origins input: {v} (type: {type(v)})")
         
+        origins = []
         if isinstance(v, str):
             if not v.startswith("["):
-                return [i.strip() for i in v.split(",")]
+                origins = [i.strip() for i in v.split(",")]
             else:
                 # Try parsing JSON string
                 import json
                 try:
                     parsed = json.loads(v)
                     print(f"DEBUG: Parsed JSON: {parsed}")
-                    return parsed
+                    origins = parsed
                 except json.JSONDecodeError:
-                    # Fallback if it looks like a list but isn't valid JSON (e.g. single quotes)
-                    # This is risky but might handle '["url"]'
-                    return v
+                    # Fallback if it looks like a list but isn't valid JSON
+                    origins = [v]
                     
-        if isinstance(v, list):
+        elif isinstance(v, list):
             # Handle nested list case (suspected Railway issue)
             if len(v) > 0 and isinstance(v[0], list):
                 print("DEBUG: Flattening nested list")
-                return [item for sublist in v for item in sublist]
-            return v
+                origins = [item for sublist in v for item in sublist]
+            else:
+                origins = v
+
+        # Always ensure our specific frontend URL is allowed, regardless of env vars
+        required_origin = "https://quiz-master-app-flame.vercel.app"
+        if required_origin not in origins:
+            print(f"DEBUG: Adding required origin {required_origin} to list")
+            origins.append(required_origin)
             
-        return v
+        return origins
 
     # Database
     DATABASE_URL: str
