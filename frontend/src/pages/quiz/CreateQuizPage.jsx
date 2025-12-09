@@ -137,7 +137,7 @@ export default function CreateQuizPage() {
       toast.error('Quiz must have at least one question')
       return
     }
-    setQuestions(questions.filter((_, i) => i !== index))
+    setQuestions(questions.filter((_, /** @type {number} */ i) => i !== index))
   }
 
   const addOption = (questionIndex) => {
