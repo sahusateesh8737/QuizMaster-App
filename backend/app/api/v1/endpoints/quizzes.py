@@ -330,6 +330,9 @@ async def complete_quiz_attempt(
     await db.commit()
     await db.refresh(attempt)
     
+    # Convert timedelta to seconds for JSON serialization
+    time_spent_seconds = int(attempt.time_spent.total_seconds()) if attempt.time_spent else None
+    
     return QuizAttemptComplete(
         id=attempt.id,
         quiz_id=attempt.quiz_id,
@@ -342,5 +345,6 @@ async def complete_quiz_attempt(
         correct_answers=correct_answers,
         start_time=attempt.start_time,
         end_time=attempt.end_time,
-        time_spent=attempt.time_spent,
+        time_spent=time_spent_seconds,
     )
+

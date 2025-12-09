@@ -1,6 +1,6 @@
 from typing import Optional, List
 from datetime import datetime, timedelta
-from pydantic import BaseModel
+from pydantic import BaseModel, field_serializer
 
 # User Answer Schemas
 class UserAnswerBase(BaseModel):
@@ -36,8 +36,17 @@ class QuizAttempt(QuizAttemptBase):
     is_passed: Optional[bool] = None
     start_time: datetime
     end_time: Optional[datetime] = None
-    time_spent: Optional[timedelta] = None
+    time_spent: Optional[int] = None  # Will store seconds
     answers: List[UserAnswer] = []
+
+    @field_serializer('time_spent')
+    def serialize_time_spent(self, value: Optional[timedelta], _info) -> Optional[int]:
+        """Convert timedelta to seconds for JSON serialization"""
+        if value is None:
+            return None
+        if isinstance(value, timedelta):
+            return int(value.total_seconds())
+        return value  # Already an int
 
     class Config:
         from_attributes = True
@@ -55,7 +64,7 @@ class QuizAttemptComplete(BaseModel):
     correct_answers: int
     start_time: datetime
     end_time: datetime
-    time_spent: Optional[timedelta] = None
+    time_spent: Optional[int] = None  # Seconds
 
     class Config:
         from_attributes = True
