@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
         "http://localhost:3000",
         "http://localhost:5173",
+        "https://quiz-master-app-flame.vercel.app",
         "https://quiz-master-app-roh5.vercel.app",
         "https://quiz-master-app-h5z5.vercel.app",
     ]
