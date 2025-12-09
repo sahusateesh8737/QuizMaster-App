@@ -8,8 +8,8 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "django-insecure-dev-key-change-in-production"  # Fallback for dev
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
     
-    # CORS
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
+    # CORS - Can be overridden via BACKEND_CORS_ORIGINS environment variable
+    BACKEND_CORS_ORIGINS: Union[List[AnyHttpUrl], str] = [
         "http://localhost:3000",
         "http://localhost:5173",
         "https://quiz-master-app-flame.vercel.app",
