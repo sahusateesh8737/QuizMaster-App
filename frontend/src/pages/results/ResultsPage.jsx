@@ -41,9 +41,8 @@ export default function ResultsPage() {
         // Calculate time taken in minutes
         let timeTaken = 0
         if (attemptData.time_spent) {
-          const parts = attemptData.time_spent.split(':')
-          timeTaken = parseInt(parts[0]) * 60 + parseInt(parts[1]) + parseInt(parts[2]) / 60
-          timeTaken = Math.round(timeTaken)
+          // time_spent is now in seconds (integer)
+          timeTaken = Math.round(attemptData.time_spent / 60)
         }
         
         // Transform backend data to frontend format
